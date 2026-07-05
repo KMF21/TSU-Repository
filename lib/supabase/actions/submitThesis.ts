@@ -1,0 +1,112 @@
+"use server";
+
+import { auth } from "@clerk/nextjs/server";
+import { createServerSupabaseClient, createServiceRoleSupabaseClient } from "@/lib/supabase/server";
+import { randomUUID } from "crypto";
+
+const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB cap, per project decision
+
+export type SubmitThesisResult =
+  | { success: true; thesisId: string }
+  | { success: false; error: string };
+
+export async function submitThesis(formData: FormData): Promise<SubmitThesisResult> {
+  const { userId } = await auth();
+  if (!userId) {
+    return { success: false, error: "You must be signed in to submit." };
+  }
+
+  const title = String(formData.get("title") ?? "").trim();
+  const abstract = String(formData.get("abstract") ?? "").trim();
+  const keywordsRaw = String(formData.get("keywords") ?? "").trim();
+  const departmentId = String(formData.get("department_id") ?? "");
+  const programmeId = String(formData.get("programme_id") ?? "");
+  const degreeType = String(formData.get("degree_type") ?? "");
+  const year = Number(formData.get("year"));
+  const supervisorName = String(formData.get("supervisor_name") ?? "").trim();
+  const file = formData.get("file") as File | null;
+
+  // --- Validation ---
+  if (!title || !abstract || !departmentId || !programmeId || !degreeType || !year || !supervisorName) {
+    return { success: false, error: "Please complete every required field before submitting." };
+  }
+  if (!file || file.size === 0) {
+    return { success: false, error: "Please attach your thesis as a PDF." };
+  }
+  if (file.type !== "application/pdf") {
+    return { success: false, error: "Only PDF files are accepted. Please convert your document and try again." };
+  }
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    return { success: false, error: "File exceeds the 50MB limit. Try reducing image resolution in your document and re-export." };
+  }
+
+  const keywords = keywordsRaw
+    .split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  const supabase = await createServerSupabaseClient();
+
+  // Resolve this user's internal id + tenant (RLS confirms it's really them)
+  const { data: profile, error: profileError } = await supabase
+    .from("users")
+    .select("id, tenant_id")
+    .eq("clerk_id", userId)
+    .single();
+
+  if (profileError || !profile) {
+    return { success: false, error: "We couldn't verify your profile. Please try signing out and back in." };
+  }
+
+  // --- Upload the raw file to a private staging path first ---
+  // The compression worker reads from here, writes the final compressed
+  // copy to the public path, and only then do we set theses.file_url.
+  const serviceClient = createServiceRoleSupabaseClient();
+  const stagingPath = `staging/${profile.tenant_id}/${randomUUID()}.pdf`;
+
+  const arrayBuffer = await file.arrayBuffer();
+  const { error: uploadError } = await serviceClient.storage
+    .from("theses")
+    .upload(stagingPath, arrayBuffer, { contentType: "application/pdf" });
+
+  if (uploadError) {
+    return { success: false, error: "File upload failed. Please try again." };
+  }
+
+  // --- Create the thesis row (status: pending, file not yet processed) ---
+  const { data: thesis, error: insertError } = await supabase
+    .from("theses")
+    .insert({
+      tenant_id: profile.tenant_id,
+      title,
+      abstract,
+      keywords,
+      author_id: profile.id,
+      department_id: departmentId,
+      programme_id: programmeId,
+      degree_type: degreeType,
+      year,
+      supervisor_name: supervisorName,
+      original_filename: file.name,
+      file_size_bytes: file.size,
+      status: "pending",
+      access_level: "restricted",
+    })
+    .select("id")
+    .single();
+
+  if (insertError || !thesis) {
+    return { success: false, error: "Could not save your submission. Please try again." };
+  }
+
+  // --- Queue the compression job (a background worker/edge function
+  // picks this up, compresses the PDF, writes the final file_url) ---
+  await serviceClient.from("file_processing_jobs").insert({
+    thesis_id: thesis.id,
+    status: "queued",
+    original_size_bytes: file.size,
+    staging_path: stagingPath,
+  });
+
+  return { success: true, thesisId: thesis.id };
+}

@@ -2,6 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Visual identity (palette, type scale, layout tokens) intentionally
-   left minimal here — this gets a dedicated design pass once the
-   auth + data layer is confirmed working end to end. */
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Pulled directly from tsucpgs.com.ng (theme-color meta tag) so the
+     repository reads as part of the same TSU digital ecosystem, not a
+     separate product with its own look. */
+  --tsu-blue: #185fa5;
+  --tsu-navy: #0f3d63;
+  --tsu-gold: #c9971c;
+  --tsu-cream: #f7f5f0;
+  --tsu-charcoal: #1f2328;
+  --tsu-slate: #6b7280;
+  --tsu-success: #2e7d32;
+  --tsu-border: #e2ddd2;
+}
+
+body {
+  background-color: var(--tsu-cream);
+  color: var(--tsu-charcoal);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
