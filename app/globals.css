@@ -2,25 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Pulled directly from tsucpgs.com.ng (theme-color meta tag) so the
-     repository reads as part of the same TSU digital ecosystem, not a
-     separate product with its own look. */
-  --tsu-blue: #185fa5;
-  --tsu-navy: #0f3d63;
-  --tsu-gold: #c9971c;
-  --tsu-cream: #f7f5f0;
-  --tsu-charcoal: #1f2328;
-  --tsu-slate: #6b7280;
-  --tsu-success: #2e7d32;
-  --tsu-border: #e2ddd2;
+  /* Rebuilt to match the live Screening Portal (tsucpgs.com.ng) —
+     dark navy dashboard language, rounded cards, pill badges — rather
+     than a standalone academic-parchment look. */
+  --tsu-bg: #0b1220;
+  --tsu-card: #111a2e;
+  --tsu-card-border: #1e2a42;
+  --tsu-input-bg: #0b1220;
+  --tsu-input-border: #223452;
+
+  --tsu-text-primary: #e8eaed;
+  --tsu-text-heading: #ffffff;
+  --tsu-text-secondary: #96a0b0;
+  --tsu-text-muted: #7c8798;
+
+  --tsu-accent-fill: #2563eb;
+  --tsu-accent-tag-bg: #132038;
+  --tsu-accent-tag-text: #7ca8e0;
+
+  --tsu-success-bg: #0f2a1c;
+  --tsu-success-text: #4ade80;
+
+  /* Reserved exclusively for the "Published" status badge — nowhere else. */
+  --tsu-gold-bg: #2a2010;
+  --tsu-gold-text: #d4a017;
 }
 
 body {
-  background-color: var(--tsu-cream);
-  color: var(--tsu-charcoal);
+  background-color: var(--tsu-bg);
+  color: var(--tsu-text-primary);
   font-family: 'Inter', system-ui, sans-serif;
 }
 
