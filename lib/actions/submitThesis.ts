@@ -99,8 +99,8 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
       original_filename: file.name,
       file_size_bytes: file.size,
       file_url: filePath,
-      status: "pending",
-      access_level: "restricted",
+     status: "pending",
+      access_level: "open",
     })
     .select("id")
     .single();

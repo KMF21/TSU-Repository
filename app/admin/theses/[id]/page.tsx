@@ -1,7 +1,9 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getThesisPreviewUrl } from "@/lib/actions/reviewThesis";
-import { ReviewDecision } from "@/components/ReviewDecision";
+import { ReviewDecision } from "@/app/components/ReviewDecision";
+
 import { notFound } from "next/navigation";
+import { AccessLevelToggle } from "@/app/components/Accessleveltoggle";
 
 const DEGREE_LABELS: Record<string, string> = {
   bsc: "B.Sc.",
@@ -20,7 +22,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
   const { data: thesis } = await supabase
     .from("theses")
     .select(
-      `id, title, abstract, keywords, year, degree_type, supervisor_name, status,
+      `id, title, abstract, keywords, year, degree_type, supervisor_name, status, access_level,
        original_filename, file_size_bytes,
        author:users!theses_author_id_fkey ( full_name, email, matric_number ),
        department:departments ( name, faculty ),
@@ -109,6 +111,8 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
               <span className="text-xs text-tsu-text-muted">Preview unavailable</span>
             )}
           </div>
+
+          <AccessLevelToggle thesisId={thesis.id} currentAccessLevel={thesis.access_level} />
 
           <ReviewDecision thesisId={thesis.id} />
         </div>

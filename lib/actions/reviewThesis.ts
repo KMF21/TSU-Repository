@@ -94,6 +94,35 @@ export async function rejectThesis(thesisId: string, reason: string): Promise<Ac
   return { success: true };
 }
 
+export async function setAccessLevel(
+  thesisId: string,
+  accessLevel: "open" | "restricted"
+): Promise<ActionResult> {
+  const check = await requireAdminProfile();
+  if (!check.success) return { success: false, error: check.error };
+
+  const supabase = await createServerSupabaseClient();
+  const serviceClient = createServiceRoleSupabaseClient();
+
+  const { error } = await supabase
+    .from("theses")
+    .update({ access_level: accessLevel })
+    .eq("id", thesisId);
+
+  if (error) return { success: false, error: "Could not update access level." };
+
+  await serviceClient.from("audit_log").insert({
+    actor_id: check.profile.id,
+    action: "changed_access_level",
+    target_table: "theses",
+    target_id: thesisId,
+    metadata: { access_level: accessLevel },
+  });
+
+  revalidatePath("/admin");
+  return { success: true };
+}
+
 /**
  * Generates a short-lived signed URL so an admin can preview the PDF.
  * Reads directly from theses.file_url — there is no separate staging

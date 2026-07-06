@@ -1,6 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { SubmissionForm } from "@/components/SubmissioForm";
+import { SubmissionForm } from "@/app/components/SubmissioForm";
 
 export default async function SubmitPage() {
   const user = await currentUser();
