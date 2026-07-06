@@ -6,9 +6,12 @@ import { revalidatePath } from "next/cache";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
-async function requireAdminProfile() {
+async function requireAdminProfile(): Promise<
+  | { success: true; profile: { id: string; role: string; tenant_id: string } }
+  | { success: false; error: string }
+> {
   const { userId } = await auth();
-  if (!userId) return { error: "Not signed in" as const };
+  if (!userId) return { success: false, error: "Not signed in" };
 
   const supabase = await createServerSupabaseClient();
   const { data: profile, error } = await supabase
@@ -18,14 +21,14 @@ async function requireAdminProfile() {
     .single();
 
   if (error || !profile || profile.role !== "admin") {
-    return { error: "Not authorized" as const };
+    return { success: false, error: "Not authorized" };
   }
-  return { profile };
+  return { success: true, profile };
 }
 
 export async function approveThesis(thesisId: string): Promise<ActionResult> {
   const check = await requireAdminProfile();
-  if ("error" in check) return { success: false, error: String(check.error) };
+  if (!check.success) return { success: false, error: check.error };
 
   const supabase = await createServerSupabaseClient();
   const serviceClient = createServiceRoleSupabaseClient();
@@ -58,7 +61,7 @@ export async function approveThesis(thesisId: string): Promise<ActionResult> {
 
 export async function rejectThesis(thesisId: string, reason: string): Promise<ActionResult> {
   const check = await requireAdminProfile();
-  if ("error" in check) return { success: false, error: String(check.error) };
+  if (!check.success) return { success: false, error: check.error };
 
   if (!reason.trim()) {
     return { success: false, error: "Please provide a reason for rejection." };
@@ -92,26 +95,26 @@ export async function rejectThesis(thesisId: string, reason: string): Promise<Ac
 }
 
 /**
- * Generates a short-lived signed URL so an admin can preview the raw
- * (pre-compression) PDF from the private staging path. Not a form action —
- * called directly from the detail page server component.
+ * Generates a short-lived signed URL so an admin can preview the PDF.
+ * Reads directly from theses.file_url — there is no separate staging
+ * path now that compression has been dropped from the submission flow.
  */
-export async function getStagingPreviewUrl(thesisId: string): Promise<string | null> {
+export async function getThesisPreviewUrl(thesisId: string): Promise<string | null> {
   const check = await requireAdminProfile();
-  if ("error" in check) return null;
+  if (!check.success) return null;
 
   const serviceClient = createServiceRoleSupabaseClient();
-  const { data: job } = await serviceClient
-    .from("file_processing_jobs")
-    .select("staging_path")
-    .eq("thesis_id", thesisId)
+  const { data: thesis } = await serviceClient
+    .from("theses")
+    .select("file_url")
+    .eq("id", thesisId)
     .single();
 
-  if (!job?.staging_path) return null;
+  if (!thesis?.file_url) return null;
 
   const { data: signed } = await serviceClient.storage
     .from("theses")
-    .createSignedUrl(job.staging_path, 60 * 10); // 10-minute link
+    .createSignedUrl(thesis.file_url, 60 * 10); // 10-minute link
 
   return signed?.signedUrl ?? null;
 }

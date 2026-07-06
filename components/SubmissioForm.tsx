@@ -279,7 +279,9 @@ export function SubmissionForm({
                 ) : (
                   <>
                     <p className="text-sm text-tsu-text-secondary">Choose a PDF to upload</p>
-                    <p className="text-xs text-tsu-text-muted mt-0.5">Up to 50MB · compressed automatically</p>
+                    <p className="text-xs text-tsu-text-muted mt-0.5">
+                      Up to 50MB. Large files should be compressed first — see the note below.
+                    </p>
                   </>
                 )}
               </div>
@@ -297,6 +299,28 @@ export function SubmissionForm({
               className="hidden"
             />
             {fileError && <p className="text-xs text-red-400 mt-2">{fileError}</p>}
+            <p className="text-xs text-tsu-text-muted mt-3 leading-relaxed">
+              If your file is large (scanned pages or many images), compress it before uploading using
+              a free tool such as{" "}
+              <a
+                href="https://smallpdf.com/compress-pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-tsu-accent-tag-text hover:underline"
+              >
+                smallpdf.com
+              </a>{" "}
+              or{" "}
+              <a
+                href="https://www.ilovepdf.com/compress_pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-tsu-accent-tag-text hover:underline"
+              >
+                ilovepdf.com
+              </a>
+              . Smaller files load and download faster for everyone accessing the repository.
+            </p>
           </div>
 
           {result && (

@@ -4,7 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { createServerSupabaseClient, createServiceRoleSupabaseClient } from "@/lib/supabase/server";
 import { randomUUID } from "crypto";
 
-const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB cap, per project decision
+const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB hard cap — the real safeguard
+const RECOMMENDED_SIZE_BYTES = 15 * 1024 * 1024; // soft, advisory threshold only
 
 export type SubmitThesisResult =
   | { success: true; thesisId: string }
@@ -37,7 +38,10 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
     return { success: false, error: "Only PDF files are accepted. Please convert your document and try again." };
   }
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return { success: false, error: "File exceeds the 50MB limit. Try reducing image resolution in your document and re-export." };
+    return {
+      success: false,
+      error: "File exceeds the 50MB limit. Please compress your PDF using a free tool such as smallpdf.com or ilovepdf.com and try again.",
+    };
   }
 
   const keywords = keywordsRaw
@@ -47,7 +51,6 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
 
   const supabase = await createServerSupabaseClient();
 
-  // Resolve this user's internal id + tenant (RLS confirms it's really them)
   const { data: profile, error: profileError } = await supabase
     .from("users")
     .select("id, tenant_id")
@@ -58,22 +61,19 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
     return { success: false, error: "We couldn't verify your profile. Please try signing out and back in." };
   }
 
-  // --- Upload the raw file to a private staging path first ---
-  // The compression worker reads from here, writes the final compressed
-  // copy to the public path, and only then do we set theses.file_url.
+  // --- Upload directly to the permanent path — no staging/compression handoff ---
   const serviceClient = createServiceRoleSupabaseClient();
-  const stagingPath = `staging/${profile.tenant_id}/${randomUUID()}.pdf`;
+  const filePath = `theses/${profile.tenant_id}/${randomUUID()}.pdf`;
 
   const arrayBuffer = await file.arrayBuffer();
   const { error: uploadError } = await serviceClient.storage
     .from("theses")
-    .upload(stagingPath, arrayBuffer, { contentType: "application/pdf" });
+    .upload(filePath, arrayBuffer, { contentType: "application/pdf" });
 
   if (uploadError) {
     return { success: false, error: "File upload failed. Please try again." };
   }
 
-  // --- Create the thesis row (status: pending, file not yet processed) ---
   const { data: thesis, error: insertError } = await supabase
     .from("theses")
     .insert({
@@ -89,6 +89,7 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
       supervisor_name: supervisorName,
       original_filename: file.name,
       file_size_bytes: file.size,
+      file_url: filePath,
       status: "pending",
       access_level: "restricted",
     })
@@ -98,15 +99,6 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
   if (insertError || !thesis) {
     return { success: false, error: "Could not save your submission. Please try again." };
   }
-
-  // --- Queue the compression job (a background worker/edge function
-  // picks this up, compresses the PDF, writes the final file_url) ---
-  await serviceClient.from("file_processing_jobs").insert({
-    thesis_id: thesis.id,
-    status: "queued",
-    original_size_bytes: file.size,
-    staging_path: stagingPath,
-  });
 
   return { success: true, thesisId: thesis.id };
 }

@@ -1,5 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getStagingPreviewUrl } from "@/lib/actions/reviewThesis";
+import { getThesisPreviewUrl } from "@/lib/actions/reviewThesis";
 import { ReviewDecision } from "@/components/ReviewDecision";
 import { notFound } from "next/navigation";
 
@@ -31,7 +31,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
 
   if (!thesis) return notFound();
 
-  const previewUrl = await getStagingPreviewUrl(params.id);
+  const previewUrl = await getThesisPreviewUrl(params.id);
   const author = thesis.author as any;
   const department = thesis.department as any;
   const programme = thesis.programme as any;
