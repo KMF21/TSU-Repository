@@ -21,10 +21,12 @@ export function SubmissionForm({
   departments,
   programmes,
   authorName,
+  initialMatricNumber,
 }: {
   departments: Department[];
   programmes: Programme[];
   authorName: string;
+  initialMatricNumber?: string;
 }) {
   const [title, setTitle] = useState("");
   const [abstract, setAbstract] = useState("");
@@ -33,6 +35,7 @@ export function SubmissionForm({
   const [programmeId, setProgrammeId] = useState("");
   const [year, setYear] = useState(new Date().getFullYear().toString());
   const [supervisorName, setSupervisorName] = useState("");
+  const [matricNumber, setMatricNumber] = useState(initialMatricNumber ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -82,6 +85,7 @@ export function SubmissionForm({
     formData.set("degree_type", selectedProgramme?.degree_type ?? "");
     formData.set("year", year);
     formData.set("supervisor_name", supervisorName);
+    formData.set("matric_number", matricNumber);
     if (file) formData.set("file", file);
 
     startTransition(async () => {
@@ -248,6 +252,19 @@ export function SubmissionForm({
                   onChange={(e) => setSupervisorName(e.target.value)}
                   className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                   placeholder="e.g. Prof. A. B. Sample"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="matric">
+                  Matric number
+                </label>
+                <input
+                  id="matric"
+                  required
+                  value={matricNumber}
+                  onChange={(e) => setMatricNumber(e.target.value)}
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  placeholder="e.g. TSU/PG/2023/0142"
                 />
               </div>
             </div>

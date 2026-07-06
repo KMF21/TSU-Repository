@@ -25,10 +25,11 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
   const degreeType = String(formData.get("degree_type") ?? "");
   const year = Number(formData.get("year"));
   const supervisorName = String(formData.get("supervisor_name") ?? "").trim();
+  const matricNumber = String(formData.get("matric_number") ?? "").trim();
   const file = formData.get("file") as File | null;
 
   // --- Validation ---
-  if (!title || !abstract || !departmentId || !programmeId || !degreeType || !year || !supervisorName) {
+  if (!title || !abstract || !departmentId || !programmeId || !degreeType || !year || !supervisorName || !matricNumber) {
     return { success: false, error: "Please complete every required field before submitting." };
   }
   if (!file || file.size === 0) {
@@ -60,6 +61,14 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
   if (profileError || !profile) {
     return { success: false, error: "We couldn't verify your profile. Please try signing out and back in." };
   }
+
+  // Capture matric number on the student's profile — it's identity data
+  // tied to the person, not the individual submission, so it's saved
+  // once here rather than duplicated on every thesis record.
+  await supabase
+    .from("users")
+    .update({ matric_number: matricNumber })
+    .eq("id", profile.id);
 
   // --- Upload directly to the permanent path — no staging/compression handoff ---
   const serviceClient = createServiceRoleSupabaseClient();
