@@ -10,6 +10,12 @@ export default function HomePage() {
           TSU Digital Research Repository
         </p>
         <div className="flex items-center gap-4">
+          <Link
+            href="/browse"
+            className="text-sm text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
+          >
+            Browse research
+          </Link>
           <SignedOut>
             <SignInButton mode="modal">
               <button className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm font-medium px-4 py-2 rounded-pill hover:bg-tsu-accent hover:text-white transition-colors">
@@ -40,17 +46,23 @@ export default function HomePage() {
           searchable, and citable in one place.
         </p>
         <div className="flex gap-3">
+          <Link
+            href="/browse"
+            className="bg-tsu-accent text-white text-sm font-medium px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
+          >
+            Browse research
+          </Link>
           <SignedIn>
             <Link
               href="/submit"
-              className="bg-tsu-accent text-white text-sm font-medium px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
+              className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm font-medium px-6 py-3 rounded-lg hover:bg-tsu-accent hover:text-white transition-colors"
             >
               Submit your research
             </Link>
           </SignedIn>
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-tsu-accent text-white text-sm font-medium px-6 py-3 rounded-lg hover:opacity-90 transition-opacity">
+              <button className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm font-medium px-6 py-3 rounded-lg hover:bg-tsu-accent hover:text-white transition-colors">
                 Sign in to submit
               </button>
             </SignInButton>
