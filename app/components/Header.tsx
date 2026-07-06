@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import logo from "../assets/tsu_logo1.png";
+
 export function Header() {
   return (
     <header className="border-b border-tsu-card-border">
@@ -9,6 +10,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3">
           {/* Sourced from the live Screening Portal (tsucpgs.com.ng) so the
               repository visually belongs to the same TSU digital ecosystem. */}
+
           <Image
             src={logo}
             width={36}
@@ -35,6 +37,12 @@ export function Header() {
           </Link>
 
           <SignedIn>
+            <Link
+              href="/dashboard"
+              className="text-sm text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
+            >
+              My submissions
+            </Link>
             <Link
               href="/submit"
               className="text-sm text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
