@@ -1,4 +1,4 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient, createServiceRoleSupabaseClient } from "@/lib/supabase/server";
 import { getThesisFileUrl } from "@/lib/actions/publicThesis";
 import { notFound } from "next/navigation";
 
@@ -20,6 +20,7 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
     .from("theses")
     .select(
       `id, title, abstract, keywords, year, degree_type, supervisor_name, access_level,
+       view_count, download_count,
        author:users!theses_author_id_fkey ( full_name ),
        department:departments ( name, faculty ),
        programme:programmes ( name )`
@@ -32,6 +33,13 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
   // back here — a restricted thesis simply won't resolve for a
   // signed-out visitor, so this doubles as the access check.
   if (!thesis) return notFound();
+
+  // Atomic increment, done server-side via service role — see
+  // migration 005 for why this isn't a plain JS read-modify-write.
+  const serviceClient = createServiceRoleSupabaseClient();
+  const { data: newViewCount } = await serviceClient.rpc("increment_view_count", {
+    p_thesis_id: params.id,
+  });
 
   const fileUrl = await getThesisFileUrl(params.id);
   const author = thesis.author as any;
@@ -83,6 +91,9 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
               How to cite this
             </p>
             <p className="font-display text-sm leading-relaxed text-tsu-text-primary">{citation}</p>
+            <p className="text-xs text-tsu-text-muted mt-4 pt-3 border-t border-tsu-card-border">
+              {newViewCount ?? thesis.view_count} views &middot; {thesis.download_count} downloads
+            </p>
           </div>
 
           {fileUrl ? (
