@@ -1,33 +1,67 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
-export default async function AdminQueuePage() {
+const STATUS_TABS = [
+  { value: "pending", label: "Pending" },
+  { value: "published", label: "Published" },
+  { value: "rejected", label: "Rejected" },
+  { value: "all", label: "All" },
+] as const;
+
+export default async function AdminQueuePage({
+  searchParams,
+}: {
+  searchParams: { status?: string };
+}) {
+  const activeStatus = searchParams.status ?? "pending";
   const supabase = await createServerSupabaseClient();
 
-  const { data: theses, error } = await supabase
+  let query = supabase
     .from("theses")
     .select(
-      `id, title, year, submitted_at, degree_type,
+      `id, title, year, submitted_at, reviewed_at, degree_type, status, access_level, rejection_reason,
        author:users!theses_author_id_fkey ( full_name ),
        department:departments ( name ),
        programme:programmes ( name )`
     )
-    .eq("status", "pending")
-    .order("submitted_at", { ascending: true });
+    .order("submitted_at", { ascending: false });
+
+  if (activeStatus !== "all") {
+    query = query.eq("status", activeStatus);
+  }
+
+  const { data: theses, error } = await query;
 
   return (
     <main className="min-h-screen bg-tsu-bg">
       <div className="max-w-3xl mx-auto px-6 py-10">
-        <div className="flex items-center justify-between mb-7">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-xs text-tsu-text-muted mb-1">Admin · TSU Digital Research Repository</p>
-            <h1 className="text-2xl font-semibold text-tsu-text-heading">Review queue</h1>
+            <h1 className="text-2xl font-semibold text-tsu-text-heading">Submissions</h1>
           </div>
-          {theses && theses.length > 0 && (
+          {theses && (
             <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill">
-              {theses.length} pending
+              {theses.length} {activeStatus === "all" ? "total" : activeStatus}
             </span>
           )}
+        </div>
+
+        {/* Status tabs */}
+        <div className="flex gap-2 mb-6">
+          {STATUS_TABS.map((tab) => (
+            <Link
+              key={tab.value}
+              href={`/admin?status=${tab.value}`}
+              className={`text-sm font-medium px-4 py-2 rounded-pill transition-colors ${
+                activeStatus === tab.value
+                  ? "bg-tsu-accent text-white"
+                  : "bg-tsu-card border border-tsu-card-border text-tsu-text-secondary hover:text-tsu-text-primary"
+              }`}
+            >
+              {tab.label}
+            </Link>
+          ))}
         </div>
 
         {error && (
@@ -38,7 +72,9 @@ export default async function AdminQueuePage() {
 
         {!error && (!theses || theses.length === 0) && (
           <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-sm">Nothing pending review right now.</p>
+            <p className="text-tsu-text-secondary text-sm">
+              Nothing {activeStatus === "all" ? "" : activeStatus} right now.
+            </p>
           </div>
         )}
 
@@ -55,15 +91,44 @@ export default async function AdminQueuePage() {
                   <p className="text-xs text-tsu-text-muted mt-1.5">
                     {t.author?.full_name} &middot; {t.department?.name} &middot; {t.programme?.name} &middot; {t.year}
                   </p>
+                  {t.status === "rejected" && t.rejection_reason && (
+                    <p className="text-xs text-red-400 mt-1.5">Reason: {t.rejection_reason}</p>
+                  )}
                 </div>
-                <span className="flex-shrink-0 ml-4 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill group-hover:bg-tsu-accent group-hover:text-white transition-colors">
-                  Review
-                </span>
+                <StatusPill status={t.status} accessLevel={t.access_level} />
               </Link>
             ))}
           </div>
         )}
       </div>
     </main>
+  );
+}
+
+function StatusPill({ status, accessLevel }: { status: string; accessLevel: string }) {
+  if (status === "published") {
+    return (
+      <span
+        className={`flex-shrink-0 ml-4 text-xs font-medium px-3.5 py-1.5 rounded-pill ${
+          accessLevel === "restricted"
+            ? "bg-tsu-gold-bg text-tsu-gold-text"
+            : "bg-tsu-success-bg text-tsu-success-text"
+        }`}
+      >
+        {accessLevel === "restricted" ? "Published (restricted)" : "Published"}
+      </span>
+    );
+  }
+  if (status === "rejected") {
+    return (
+      <span className="flex-shrink-0 ml-4 bg-red-950 text-red-400 text-xs font-medium px-3.5 py-1.5 rounded-pill">
+        Rejected
+      </span>
+    );
+  }
+  return (
+    <span className="flex-shrink-0 ml-4 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill group-hover:bg-tsu-accent group-hover:text-white transition-colors">
+      Review
+    </span>
   );
 }
