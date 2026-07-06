@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-
+import Image from "next/image";
+import logo from "../assets/tsu_logo1.png";
 export function Header() {
   return (
     <header className="border-b border-tsu-card-border">
@@ -8,8 +9,10 @@ export function Header() {
         <Link href="/" className="flex items-center gap-3">
           {/* Sourced from the live Screening Portal (tsucpgs.com.ng) so the
               repository visually belongs to the same TSU digital ecosystem. */}
-          <img
-            src="https://www.tsucpgs.com.ng/assets/tsu_logo1.png"
+          <Image
+            src={logo}
+            width={36}
+            height={36}
             alt="Taraba State University"
             className="h-9 w-9 rounded-full object-cover flex-shrink-0"
           />
