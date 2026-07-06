@@ -37,7 +37,7 @@ export default async function AdminQueuePage({
       <div className="max-w-3xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <p className="text-xs text-tsu-text-muted mb-1">Admin · TSU Digital Research Repository</p>
+            <p className="text-xs text-tsu-text-muted mb-1">Admin</p>
             <h1 className="text-2xl font-semibold text-tsu-text-heading">Submissions</h1>
           </div>
           {theses && (

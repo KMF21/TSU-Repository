@@ -111,7 +111,7 @@ export function SubmissionForm({
         {/* Header */}
         <div className="flex items-center justify-between mb-7">
           <div>
-            <p className="text-xs text-tsu-text-muted mb-1">TSU Digital Research Repository</p>
+            <p className="text-xs text-tsu-text-muted mb-1">Deposit</p>
             <h1 className="text-2xl font-semibold text-tsu-text-heading">Submit your research</h1>
           </div>
           <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill border border-tsu-input-border">

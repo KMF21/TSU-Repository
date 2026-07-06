@@ -49,7 +49,7 @@ export default async function BrowsePage({
   return (
     <main className="min-h-screen bg-tsu-bg">
       <div className="max-w-4xl mx-auto px-6 py-10">
-        <p className="text-xs text-tsu-text-muted mb-1">TSU Digital Research Repository</p>
+        <p className="text-xs text-tsu-text-muted mb-1">Search the archive</p>
         <h1 className="text-2xl font-semibold text-tsu-text-heading mb-7">Browse research</h1>
 
         {/* Search + filters */}
