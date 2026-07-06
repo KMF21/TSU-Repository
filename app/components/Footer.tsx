@@ -14,7 +14,7 @@ export function Footer() {
             href="https://www.kmfenterprise.ng"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-tsu-text-secondary transition-colors"
+            className="text-tsu-success-text hover:text-tsu-text-secondary transition-colors"
           >
             Built and Maintained by KMFenterprise
           </a>
