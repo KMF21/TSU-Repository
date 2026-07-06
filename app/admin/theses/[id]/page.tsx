@@ -1,8 +1,8 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getThesisPreviewUrl } from "@/lib/actions/reviewThesis";
-import { ReviewDecision } from "@/app/components/ReviewDecision";
 
 import { notFound } from "next/navigation";
+import { ReviewDecision } from "@/app/components/ReviewDecision";
 import { AccessLevelToggle } from "@/app/components/Accessleveltoggle";
 
 const DEGREE_LABELS: Record<string, string> = {
