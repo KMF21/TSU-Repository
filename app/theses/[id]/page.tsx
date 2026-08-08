@@ -1,6 +1,10 @@
-import { createServerSupabaseClient, createServiceRoleSupabaseClient } from "@/lib/supabase/server";
+import {
+  createServerSupabaseClient,
+  createServiceRoleSupabaseClient,
+} from "@/lib/supabase/server";
 import { getThesisFileUrl } from "@/lib/actions/publicThesis";
 import { notFound } from "next/navigation";
+import { ExpandableText } from "@/app/components/ExpandableText";
 
 const DEGREE_LABELS: Record<string, string> = {
   bsc: "B.Sc.",
@@ -13,7 +17,11 @@ const DEGREE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-export default async function ThesisDetailPage({ params }: { params: { id: string } }) {
+export default async function ThesisDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const supabase = await createServerSupabaseClient();
 
   const { data: thesis } = await supabase
@@ -23,7 +31,7 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
        view_count, download_count,
        author:users!theses_author_id_fkey ( full_name ),
        department:departments ( name, faculty ),
-       programme:programmes ( name )`
+       programme:programmes ( name )`,
     )
     .eq("id", params.id)
     .eq("status", "published")
@@ -37,9 +45,12 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
   // Atomic increment, done server-side via service role — see
   // migration 005 for why this isn't a plain JS read-modify-write.
   const serviceClient = createServiceRoleSupabaseClient();
-  const { data: newViewCount } = await serviceClient.rpc("increment_view_count", {
-    p_thesis_id: params.id,
-  });
+  const { data: newViewCount } = await serviceClient.rpc(
+    "increment_view_count",
+    {
+      p_thesis_id: params.id,
+    },
+  );
 
   const fileUrl = await getThesisFileUrl(params.id);
   const author = thesis.author as any;
@@ -64,14 +75,23 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
           <h1 className="text-xl font-semibold text-tsu-text-heading mb-2 leading-snug">
             {thesis.title}
           </h1>
-          <p className="text-sm text-tsu-text-secondary mb-1">{author?.full_name}</p>
+          <p className="text-sm text-tsu-text-secondary mb-1">
+            {author?.full_name}
+          </p>
           <p className="text-xs text-tsu-text-muted mb-6">
-            {DEGREE_LABELS[thesis.degree_type]} &middot; {department?.name} &middot; {thesis.year}
+            {DEGREE_LABELS[thesis.degree_type]} &middot; {department?.name}{" "}
+            &middot; {thesis.year}
           </p>
 
           <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-5 mb-4">
-            <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">Abstract</p>
-            <p className="text-sm text-tsu-text-secondary leading-relaxed">{thesis.abstract}</p>
+            <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
+              Abstract
+            </p>
+            <ExpandableText
+              text={thesis.abstract}
+              maxLength={400}
+              className="text-sm text-tsu-text-secondary leading-relaxed"
+            />
             {thesis.keywords?.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-4">
                 {thesis.keywords.map((k: string) => (
@@ -90,9 +110,12 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               How to cite this
             </p>
-            <p className="font-display text-sm leading-relaxed text-tsu-text-primary">{citation}</p>
+            <p className="font-display text-sm leading-relaxed text-tsu-text-primary">
+              {citation}
+            </p>
             <p className="text-xs text-tsu-text-muted mt-4 pt-3 border-t border-tsu-card-border">
-              {newViewCount ?? thesis.view_count} views &middot; {thesis.download_count} downloads
+              {newViewCount ?? thesis.view_count} views &middot;{" "}
+              {thesis.download_count} downloads
             </p>
           </div>
 
