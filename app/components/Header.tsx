@@ -21,7 +21,7 @@ export function Header() {
             className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover flex-shrink-0"
           />
           <div className="min-w-0">
-            <p className="text-md sm:text-md md:text-lg font-medium text-tsu-text-heading leading-tight truncate">
+            <p className="text-md sm:text-sm md:text-lg font-medium text-tsu-text-heading leading-tight truncate">
               TSU Digital Research Repository
             </p>
             <p className="hidden sm:block text-[11px] text-tsu-text-muted leading-tight">

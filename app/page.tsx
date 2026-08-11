@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-2xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-2xl mx-auto -mt-20  px-6 text-center">
           <p className="text-md tracking-widest uppercase text-tsu-accent-tag-text mb-4">
             College of Postgraduate Studies
           </p>
