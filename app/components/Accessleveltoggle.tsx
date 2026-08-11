@@ -33,10 +33,10 @@ export function AccessLevelToggle({
   return (
     <div className="flex items-center justify-between bg-tsu-bg border border-tsu-card-border rounded-card p-5 mb-6">
       <div>
-        <p className="text-sm text-tsu-text-primary mb-0.5">
+        <p className="text-md md:text-lg text-tsu-text-primary mb-0.5">
           {level === "open" ? "Open access" : "Restricted"}
         </p>
-        <p className="text-xs text-tsu-text-muted">
+        <p className="text-md text-tsu-text-muted">
           {level === "open"
             ? "Visible to anyone once published."
             : "Only visible to signed-in TSU users once published."}
@@ -45,7 +45,7 @@ export function AccessLevelToggle({
       <button
         onClick={toggle}
         disabled={isPending}
-        className={`text-xs font-medium px-4 py-2 rounded-pill transition-colors disabled:opacity-50 ${
+        className={`text-md font-medium px-4 py-2 rounded-pill transition-colors disabled:opacity-50 ${
           level === "open"
             ? "bg-tsu-accent-tag-bg text-tsu-accent-tag-text hover:bg-tsu-accent hover:text-white"
             : "bg-tsu-gold-bg text-tsu-gold-text hover:opacity-80"
@@ -53,7 +53,7 @@ export function AccessLevelToggle({
       >
         {isPending ? "Updating…" : level === "open" ? "Make restricted" : "Make open"}
       </button>
-      {error && <p className="text-xs text-red-400 ml-3">{error}</p>}
+      {error && <p className="text-md text-red-400 ml-3">{error}</p>}
     </div>
   );
 }

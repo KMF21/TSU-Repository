@@ -43,14 +43,14 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="bg-tsu-card border border-tsu-card-border rounded-card p-8">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-xs text-tsu-text-muted">Reviewing submission</p>
-            <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill">
+            <p className="text-md text-tsu-text-muted">Reviewing submission</p>
+            <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md font-medium px-3.5 py-1.5 rounded-pill">
               {thesis.status}
             </span>
           </div>
 
-          <h1 className="text-xl font-semibold text-tsu-text-heading mb-1">{thesis.title}</h1>
-          <p className="text-sm text-tsu-text-muted mb-6">
+          <h1 className="text-xl md:text-2xl font-semibold text-tsu-text-heading mb-1">{thesis.title}</h1>
+          <p className="text-md md:text-lg text-tsu-text-muted mb-6">
             {author?.full_name} &middot; {author?.matric_number || "No matric number on file"}
           </p>
 
@@ -58,7 +58,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               Academic record
             </p>
-            <dl className="grid grid-cols-2 gap-y-3 text-sm">
+            <dl className="grid grid-cols-2 gap-y-3 text-md md:text-lg">
               <dt className="text-tsu-text-muted">Department</dt>
               <dd className="text-tsu-text-primary text-right">{department?.name}</dd>
               <dt className="text-tsu-text-muted">Programme</dt>
@@ -76,13 +76,13 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               Abstract
             </p>
-            <p className="text-sm text-tsu-text-secondary leading-relaxed">{thesis.abstract}</p>
+            <p className="text-md md:text-lg text-tsu-text-secondary leading-relaxed">{thesis.abstract}</p>
             {thesis.keywords?.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-4">
                 {thesis.keywords.map((k: string) => (
                   <span
                     key={k}
-                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs px-3 py-1 rounded-pill"
+                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md px-3 py-1 rounded-pill"
                   >
                     {k}
                   </span>
@@ -93,8 +93,8 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
 
           <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-5 mb-6 flex items-center justify-between">
             <div>
-              <p className="text-sm text-tsu-text-primary">{thesis.original_filename}</p>
-              <p className="text-xs text-tsu-text-muted mt-0.5">
+              <p className="text-md md:text-lg text-tsu-text-primary">{thesis.original_filename}</p>
+              <p className="text-md text-tsu-text-muted mt-0.5">
                 {thesis.file_size_bytes ? (thesis.file_size_bytes / (1024 * 1024)).toFixed(1) : "?"}MB
               </p>
             </div>
@@ -103,12 +103,12 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
                 href={previewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-tsu-accent text-white text-xs font-medium px-4 py-2 rounded-pill hover:opacity-90 transition-opacity"
+                className="bg-tsu-accent text-white text-md font-medium px-4 py-2 rounded-pill hover:opacity-90 transition-opacity"
               >
                 Open PDF
               </a>
             ) : (
-              <span className="text-xs text-tsu-text-muted">Preview unavailable</span>
+              <span className="text-md text-tsu-text-muted">Preview unavailable</span>
             )}
           </div>
 

@@ -49,8 +49,8 @@ export default async function BrowsePage({
   return (
     <main className="min-h-screen bg-tsu-bg">
       <div className="max-w-4xl mx-auto px-6 py-10">
-        <p className="text-xs text-tsu-text-muted mb-1">Search the archive</p>
-        <h1 className="text-2xl font-semibold text-tsu-text-heading mb-7">Browse research</h1>
+        <p className="text-md text-tsu-text-muted mb-1">Search the archive</p>
+        <h1 className="text-2xl md:text-4xl font-semibold text-tsu-text-heading mb-7">Browse research</h1>
 
         {/* Search + filters */}
         <form method="GET" className="bg-tsu-card border border-tsu-card-border rounded-card p-5 mb-6">
@@ -59,13 +59,13 @@ export default async function BrowsePage({
             name="q"
             defaultValue={q}
             placeholder="Search by title, abstract, or keyword"
-            className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary mb-3 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+            className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary mb-3 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
           />
           <div className="grid grid-cols-2 gap-3">
             <select
               name="department"
               defaultValue={department ?? ""}
-              className="bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
             >
               <option value="">All departments</option>
               {departments?.map((d) => (
@@ -77,7 +77,7 @@ export default async function BrowsePage({
             <select
               name="degree"
               defaultValue={degree ?? ""}
-              className="bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
             >
               <option value="">All degree types</option>
               {Object.entries(DEGREE_LABELS).map(([value, label]) => (
@@ -89,21 +89,21 @@ export default async function BrowsePage({
           </div>
           <button
             type="submit"
-            className="mt-3 bg-tsu-accent text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+            className="mt-3 bg-tsu-accent text-white text-md md:text-lg font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
           >
             Search
           </button>
         </form>
 
         {error && (
-          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-sm">
+          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-md md:text-lg">
             Could not load results: {error.message}
           </div>
         )}
 
         {!error && (!theses || theses.length === 0) && (
           <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-sm">
+            <p className="text-tsu-text-secondary text-md md:text-lg">
               {q || department || degree
                 ? "No results match your search."
                 : "No published research yet."}
@@ -119,8 +119,8 @@ export default async function BrowsePage({
                 href={`/theses/${t.id}`}
                 className="bg-tsu-card border border-tsu-card-border rounded-card p-5 hover:border-tsu-accent transition-colors"
               >
-                <p className="text-sm font-medium text-tsu-text-heading mb-1.5">{t.title}</p>
-                <p className="text-xs text-tsu-text-muted">
+                <p className="text-md md:text-lg font-medium text-tsu-text-heading mb-1.5">{t.title}</p>
+                <p className="text-md text-tsu-text-muted">
                   {t.author?.full_name} &middot; {t.department?.name} &middot;{" "}
                   {DEGREE_LABELS[t.degree_type]} &middot; {t.year}
                 </p>

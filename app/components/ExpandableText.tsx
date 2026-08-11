@@ -23,7 +23,7 @@ export function ExpandableText({
       {needsTruncation && (
         <button
           onClick={() => setExpanded((v) => !v)}
-          className="text-xs text-tsu-accent-tag-text hover:underline mt-2"
+          className="text-md text-tsu-accent-tag-text hover:underline mt-2"
         >
           {expanded ? "Show less" : "Read more"}
         </button>

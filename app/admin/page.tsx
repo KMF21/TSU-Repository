@@ -37,11 +37,11 @@ export default async function AdminQueuePage({
       <div className="max-w-3xl mx-auto px-6 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <p className="text-xs text-tsu-text-muted mb-1">Admin</p>
-            <h1 className="text-2xl font-semibold text-tsu-text-heading">Submissions</h1>
+            <p className="text-md text-tsu-text-muted mb-1">Admin</p>
+            <h1 className="text-2xl md:text-4xl font-semibold text-tsu-text-heading">Submissions</h1>
           </div>
           {theses && (
-            <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill">
+            <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md font-medium px-3.5 py-1.5 rounded-pill">
               {theses.length} {activeStatus === "all" ? "total" : activeStatus}
             </span>
           )}
@@ -53,7 +53,7 @@ export default async function AdminQueuePage({
             <Link
               key={tab.value}
               href={`/admin?status=${tab.value}`}
-              className={`text-sm font-medium px-4 py-2 rounded-pill transition-colors ${
+              className={`text-md md:text-lg font-medium px-4 py-2 rounded-pill transition-colors ${
                 activeStatus === tab.value
                   ? "bg-tsu-accent text-white"
                   : "bg-tsu-card border border-tsu-card-border text-tsu-text-secondary hover:text-tsu-text-primary"
@@ -65,14 +65,14 @@ export default async function AdminQueuePage({
         </div>
 
         {error && (
-          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-sm">
+          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-md md:text-lg">
             Could not load submissions: {error.message}
           </div>
         )}
 
         {!error && (!theses || theses.length === 0) && (
           <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-sm">
+            <p className="text-tsu-text-secondary text-md md:text-lg">
               Nothing {activeStatus === "all" ? "" : activeStatus} right now.
             </p>
           </div>
@@ -87,12 +87,12 @@ export default async function AdminQueuePage({
                 className="bg-tsu-card border border-tsu-card-border rounded-card p-5 flex items-center justify-between hover:border-tsu-accent transition-colors group"
               >
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-tsu-text-heading truncate">{t.title}</p>
-                  <p className="text-xs text-tsu-text-muted mt-1.5">
+                  <p className="text-md md:text-lg font-medium text-tsu-text-heading truncate">{t.title}</p>
+                  <p className="text-md text-tsu-text-muted mt-1.5">
                     {t.author?.full_name} &middot; {t.department?.name} &middot; {t.programme?.name} &middot; {t.year}
                   </p>
                   {t.status === "rejected" && t.rejection_reason && (
-                    <p className="text-xs text-red-400 mt-1.5">Reason: {t.rejection_reason}</p>
+                    <p className="text-md text-red-400 mt-1.5">Reason: {t.rejection_reason}</p>
                   )}
                 </div>
                 <StatusPill status={t.status} accessLevel={t.access_level} />
@@ -109,7 +109,7 @@ function StatusPill({ status, accessLevel }: { status: string; accessLevel: stri
   if (status === "published") {
     return (
       <span
-        className={`flex-shrink-0 ml-4 text-xs font-medium px-3.5 py-1.5 rounded-pill ${
+        className={`flex-shrink-0 ml-4 text-md font-medium px-3.5 py-1.5 rounded-pill ${
           accessLevel === "restricted"
             ? "bg-tsu-gold-bg text-tsu-gold-text"
             : "bg-tsu-success-bg text-tsu-success-text"
@@ -121,13 +121,13 @@ function StatusPill({ status, accessLevel }: { status: string; accessLevel: stri
   }
   if (status === "rejected") {
     return (
-      <span className="flex-shrink-0 ml-4 bg-red-950 text-red-400 text-xs font-medium px-3.5 py-1.5 rounded-pill">
+      <span className="flex-shrink-0 ml-4 bg-red-950 text-red-400 text-md font-medium px-3.5 py-1.5 rounded-pill">
         Rejected
       </span>
     );
   }
   return (
-    <span className="flex-shrink-0 ml-4 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill group-hover:bg-tsu-accent group-hover:text-white transition-colors">
+    <span className="flex-shrink-0 ml-4 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md font-medium px-3.5 py-1.5 rounded-pill group-hover:bg-tsu-accent group-hover:text-white transition-colors">
       Review
     </span>
   );

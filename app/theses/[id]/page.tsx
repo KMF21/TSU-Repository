@@ -64,21 +64,21 @@ export default async function ThesisDetailPage({
       <div className="max-w-2xl mx-auto px-6 py-10">
         <div className="bg-tsu-card border border-tsu-card-border rounded-card p-8">
           <div className="flex items-center justify-between mb-6">
-            <p className="text-xs text-tsu-text-muted">{department?.faculty}</p>
+            <p className="text-md text-tsu-text-muted">{department?.faculty}</p>
             {thesis.access_level === "restricted" && (
-              <span className="bg-tsu-gold-bg text-tsu-gold-text text-xs font-medium px-3.5 py-1.5 rounded-pill">
+              <span className="bg-tsu-gold-bg text-tsu-gold-text text-md font-medium px-3.5 py-1.5 rounded-pill">
                 TSU access only
               </span>
             )}
           </div>
 
-          <h1 className="text-xl font-semibold text-tsu-text-heading mb-2 leading-snug">
+          <h1 className="text-xl md:text-2xl font-semibold text-tsu-text-heading mb-2 leading-snug">
             {thesis.title}
           </h1>
-          <p className="text-sm text-tsu-text-secondary mb-1">
+          <p className="text-md md:text-lg text-tsu-text-secondary mb-1">
             {author?.full_name}
           </p>
-          <p className="text-xs text-tsu-text-muted mb-6">
+          <p className="text-md text-tsu-text-muted mb-6">
             {DEGREE_LABELS[thesis.degree_type]} &middot; {department?.name}{" "}
             &middot; {thesis.year}
           </p>
@@ -90,14 +90,14 @@ export default async function ThesisDetailPage({
             <ExpandableText
               text={thesis.abstract}
               maxLength={400}
-              className="text-sm text-tsu-text-secondary leading-relaxed"
+              className="text-md md:text-lg text-tsu-text-secondary leading-relaxed"
             />
             {thesis.keywords?.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-4">
                 {thesis.keywords.map((k: string) => (
                   <span
                     key={k}
-                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs px-3 py-1 rounded-pill"
+                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md px-3 py-1 rounded-pill"
                   >
                     {k}
                   </span>
@@ -110,10 +110,10 @@ export default async function ThesisDetailPage({
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               How to cite this
             </p>
-            <p className="font-display text-sm leading-relaxed text-tsu-text-primary">
+            <p className="font-display text-md md:text-lg leading-relaxed text-tsu-text-primary">
               {citation}
             </p>
-            <p className="text-xs text-tsu-text-muted mt-4 pt-3 border-t border-tsu-card-border">
+            <p className="text-md text-tsu-text-muted mt-4 pt-3 border-t border-tsu-card-border">
               {newViewCount ?? thesis.view_count} views &middot;{" "}
               {thesis.download_count} downloads
             </p>
@@ -124,13 +124,13 @@ export default async function ThesisDetailPage({
               href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-center bg-tsu-accent text-white text-sm font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity"
+              className="block w-full text-center bg-tsu-accent text-white text-md md:text-lg font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity"
             >
               Download PDF
             </a>
           ) : (
             <div className="bg-tsu-input-bg border border-tsu-input-border rounded-lg p-4 text-center">
-              <p className="text-sm text-tsu-text-muted">
+              <p className="text-md md:text-lg text-tsu-text-muted">
                 Sign in with your TSU account to download this thesis.
               </p>
             </div>

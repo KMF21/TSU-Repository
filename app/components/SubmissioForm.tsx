@@ -111,10 +111,10 @@ export function SubmissionForm({
         {/* Header */}
         <div className="flex items-center justify-between mb-7">
           <div>
-            <p className="text-xs text-tsu-text-muted mb-1">Deposit</p>
-            <h1 className="text-2xl font-semibold text-tsu-text-heading">Submit your research</h1>
+            <p className="text-md text-tsu-text-muted mb-1">Deposit</p>
+            <h1 className="text-2xl md:text-4xl font-semibold text-tsu-text-heading">Submit your research</h1>
           </div>
-          <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs font-medium px-3.5 py-1.5 rounded-pill border border-tsu-input-border">
+          <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md font-medium px-3.5 py-1.5 rounded-pill border border-tsu-input-border">
             Draft
           </span>
         </div>
@@ -126,7 +126,7 @@ export function SubmissionForm({
               Thesis details
             </p>
 
-            <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="title">
+            <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="title">
               Title
             </label>
             <input
@@ -134,11 +134,11 @@ export function SubmissionForm({
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
               placeholder="Full thesis title, as it appears on the title page"
             />
 
-            <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="abstract">
+            <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="abstract">
               Abstract
             </label>
             <textarea
@@ -147,18 +147,18 @@ export function SubmissionForm({
               rows={5}
               value={abstract}
               onChange={(e) => setAbstract(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-secondary leading-relaxed mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-secondary leading-relaxed mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
               placeholder="Paste the abstract exactly as submitted in your final defense copy"
             />
 
-            <label className="block text-xs text-tsu-text-secondary mb-2" htmlFor="keywords">
+            <label className="block text-md text-tsu-text-secondary mb-2" htmlFor="keywords">
               Keywords
             </label>
             <input
               id="keywords"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary mb-2 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary mb-2 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
               placeholder="Separate with commas — e.g. urban planning, Jalingo"
             />
             {keywordChips.length > 0 && (
@@ -166,7 +166,7 @@ export function SubmissionForm({
                 {keywordChips.map((k) => (
                   <span
                     key={k}
-                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-xs px-3 py-1 rounded-pill"
+                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md px-3 py-1 rounded-pill"
                   >
                     {k}
                   </span>
@@ -182,7 +182,7 @@ export function SubmissionForm({
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="department">
+                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="department">
                   Department
                 </label>
                 <select
@@ -193,7 +193,7 @@ export function SubmissionForm({
                     setDepartmentId(e.target.value);
                     setProgrammeId("");
                   }}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                 >
                   <option value="">Select department</option>
                   {departments.map((d) => (
@@ -205,7 +205,7 @@ export function SubmissionForm({
               </div>
 
               <div>
-                <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="programme">
+                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="programme">
                   Programme
                 </label>
                 <select
@@ -214,7 +214,7 @@ export function SubmissionForm({
                   value={programmeId}
                   onChange={(e) => setProgrammeId(e.target.value)}
                   disabled={!departmentId}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent disabled:opacity-40"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent disabled:opacity-40"
                 >
                   <option value="">Select programme</option>
                   {filteredProgrammes.map((p) => (
@@ -226,7 +226,7 @@ export function SubmissionForm({
               </div>
 
               <div>
-                <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="year">
+                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="year">
                   Year of completion
                 </label>
                 <input
@@ -237,12 +237,12 @@ export function SubmissionForm({
                   max={new Date().getFullYear()}
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="supervisor">
+                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="supervisor">
                   Supervisor
                 </label>
                 <input
@@ -250,12 +250,12 @@ export function SubmissionForm({
                   required
                   value={supervisorName}
                   onChange={(e) => setSupervisorName(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                   placeholder="e.g. Prof. A. B. Sample"
                 />
               </div>
               <div>
-                <label className="block text-xs text-tsu-text-secondary mb-1.5" htmlFor="matric">
+                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="matric">
                   Matric number
                 </label>
                 <input
@@ -263,7 +263,7 @@ export function SubmissionForm({
                   required
                   value={matricNumber}
                   onChange={(e) => setMatricNumber(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                   placeholder="e.g. TSU/PG/2023/0142"
                 />
               </div>
@@ -288,22 +288,22 @@ export function SubmissionForm({
               <div className="flex-1 min-w-0">
                 {file ? (
                   <>
-                    <p className="text-sm text-tsu-text-primary truncate">{file.name}</p>
-                    <p className="text-xs text-tsu-text-muted mt-0.5">
+                    <p className="text-md md:text-lg text-tsu-text-primary truncate">{file.name}</p>
+                    <p className="text-md text-tsu-text-muted mt-0.5">
                       {(file.size / (1024 * 1024)).toFixed(1)}MB · PDF
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-sm text-tsu-text-secondary">Choose a PDF to upload</p>
-                    <p className="text-xs text-tsu-text-muted mt-0.5">
+                    <p className="text-md md:text-lg text-tsu-text-secondary">Choose a PDF to upload</p>
+                    <p className="text-md text-tsu-text-muted mt-0.5">
                       Up to 50MB. Large files should be compressed first — see the note below.
                     </p>
                   </>
                 )}
               </div>
               {fileReady && (
-                <span className="bg-tsu-success-bg text-tsu-success-text text-xs font-medium px-3 py-1.5 rounded-pill flex-shrink-0">
+                <span className="bg-tsu-success-bg text-tsu-success-text text-md font-medium px-3 py-1.5 rounded-pill flex-shrink-0">
                   Ready
                 </span>
               )}
@@ -315,8 +315,8 @@ export function SubmissionForm({
               onChange={handleFileChange}
               className="hidden"
             />
-            {fileError && <p className="text-xs text-red-400 mt-2">{fileError}</p>}
-            <p className="text-xs text-tsu-text-muted mt-3 leading-relaxed">
+            {fileError && <p className="text-md text-red-400 mt-2">{fileError}</p>}
+            <p className="text-md text-tsu-text-muted mt-3 leading-relaxed">
               If your file is large (scanned pages or many images), compress it before uploading using
               a free tool such as{" "}
               <a
@@ -342,7 +342,7 @@ export function SubmissionForm({
 
           {result && (
             <div
-              className={`rounded-lg p-4 text-sm ${
+              className={`rounded-lg p-4 text-md md:text-lg ${
                 result.success
                   ? "bg-tsu-success-bg text-tsu-success-text"
                   : "bg-red-950 text-red-400"
@@ -355,7 +355,7 @@ export function SubmissionForm({
           <button
             type="submit"
             disabled={isPending || !!fileError}
-            className="w-full bg-tsu-accent text-white text-sm font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full bg-tsu-accent text-white text-md md:text-lg font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {isPending ? "Submitting…" : "Submit for review"}
           </button>
@@ -379,7 +379,7 @@ export function SubmissionForm({
             How this will be cited
           </p>
           <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-5">
-            <p className="font-display text-sm leading-relaxed text-tsu-text-primary">
+            <p className="font-display text-md md:text-lg leading-relaxed text-tsu-text-primary">
               {authorName || "Author name"}. ({year || "Year"}).{" "}
               <span className="italic">{title || "Thesis title"}</span>.{" "}
               {selectedProgramme ? DEGREE_LABELS[selectedProgramme.degree_type] : "Degree"} thesis,{" "}
@@ -413,7 +413,7 @@ function StepRow({
 
   return (
     <div className="flex items-center gap-3">
-      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-xs ${circleClass}`}>
+      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-md ${circleClass}`}>
         {state === "done" ? (
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M20 6L9 17l-5-5" />
@@ -422,7 +422,7 @@ function StepRow({
           number
         )}
       </div>
-      <p className={`text-sm ${textClass}`}>{label}</p>
+      <p className={`text-md md:text-lg ${textClass}`}>{label}</p>
     </div>
   );
 }
