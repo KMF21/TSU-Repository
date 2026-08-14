@@ -4,6 +4,7 @@ import { getThesisPreviewUrl } from "@/lib/actions/reviewThesis";
 import { notFound } from "next/navigation";
 import { ReviewDecision } from "@/app/components/ReviewDecision";
 import { AccessLevelToggle } from "@/app/components/Accessleveltoggle";
+import { ExpandableText } from "@/app/components/ExpandableText";
 
 const DEGREE_LABELS: Record<string, string> = {
   bsc: "B.Sc.",
@@ -76,13 +77,17 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               Abstract
             </p>
-            <p className="text-sm md:text-md text-tsu-text-secondary leading-relaxed">{thesis.abstract}</p>
+            <ExpandableText
+              text={thesis.abstract}
+              maxLength={400}
+              className="text-sm md:text-md text-tsu-text-secondary leading-relaxed"
+            />
             {thesis.keywords?.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-4">
                 {thesis.keywords.map((k: string) => (
                   <span
                     key={k}
-                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md px-3 py-1 rounded-pill"
+                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm px-3 py-1 rounded-pill"
                   >
                     {k}
                   </span>

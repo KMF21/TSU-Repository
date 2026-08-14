@@ -97,7 +97,7 @@ export default async function ThesisDetailPage({
                 {thesis.keywords.map((k: string) => (
                   <span
                     key={k}
-                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md px-3 py-1 rounded-pill"
+                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm px-3 py-1 rounded-pill"
                   >
                     {k}
                   </span>
