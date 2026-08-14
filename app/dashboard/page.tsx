@@ -38,7 +38,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href="/submit"
-            className="bg-tsu-accent text-white text-md md:text-lg font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+            className="bg-tsu-accent text-white text-sm md:text-md font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
           >
             Submit research
           </Link>
@@ -46,12 +46,12 @@ export default async function DashboardPage() {
 
         {(!theses || theses.length === 0) && (
           <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-md md:text-lg mb-4">
+            <p className="text-tsu-text-secondary text-sm md:text-md mb-4">
               You haven't submitted any research yet.
             </p>
             <Link
               href="/submit"
-              className="inline-block bg-tsu-accent text-white text-md md:text-lg font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+              className="inline-block bg-tsu-accent text-white text-sm md:text-md font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
             >
               Submit your first thesis
             </Link>
@@ -84,7 +84,7 @@ function SubmissionCard({ thesis }: { thesis: any }) {
     <div className="bg-tsu-card border border-tsu-card-border rounded-card p-6">
       <div className="flex items-start justify-between mb-4">
         <div className="min-w-0 pr-4">
-          <p className="text-md md:text-lg font-medium text-tsu-text-heading">{thesis.title}</p>
+          <p className="text-sm md:text-md font-medium text-tsu-text-heading">{thesis.title}</p>
           <p className="text-md text-tsu-text-muted mt-1">
             {thesis.department?.name} &middot; {DEGREE_LABELS[thesis.degree_type]} &middot; {thesis.year}
           </p>

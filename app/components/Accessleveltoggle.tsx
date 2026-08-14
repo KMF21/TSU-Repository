@@ -33,7 +33,7 @@ export function AccessLevelToggle({
   return (
     <div className="flex items-center justify-between bg-tsu-bg border border-tsu-card-border rounded-card p-5 mb-6">
       <div>
-        <p className="text-md md:text-lg text-tsu-text-primary mb-0.5">
+        <p className="text-sm md:text-md text-tsu-text-primary mb-0.5">
           {level === "open" ? "Open access" : "Restricted"}
         </p>
         <p className="text-md text-tsu-text-muted">

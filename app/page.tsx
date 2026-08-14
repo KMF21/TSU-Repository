@@ -44,21 +44,21 @@ export default function HomePage() {
           <div className="flex flex-wrap gap-3 justify-center">
             <Link
               href="/browse"
-              className="bg-tsu-accent text-white text-md md:text-lg font-medium px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
+              className="bg-tsu-accent text-white text-sm md:text-md font-medium px-6 py-3 rounded-lg hover:opacity-90 transition-opacity"
             >
               Browse research
             </Link>
             <SignedIn>
               <Link
                 href="/submit"
-                className="bg-white/10 backdrop-blur border border-white/20 text-white text-md md:text-lg font-medium px-6 py-3 rounded-lg hover:bg-white/20 transition-colors"
+                className="bg-white/10 backdrop-blur border border-white/20 text-white text-sm md:text-md font-medium px-6 py-3 rounded-lg hover:bg-white/20 transition-colors"
               >
                 Submit your research
               </Link>
             </SignedIn>
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="bg-white/10 backdrop-blur border border-white/20 text-white text-md md:text-lg font-medium px-6 py-3 rounded-lg hover:bg-white/20 transition-colors">
+                <button className="bg-white/10 backdrop-blur border border-white/20 text-white text-sm md:text-md font-medium px-6 py-3 rounded-lg hover:bg-white/20 transition-colors">
                   Sign in to submit
                 </button>
               </SignInButton>
@@ -141,7 +141,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
 function Guideline({ title, body }: { title: string; body: React.ReactNode }) {
   return (
     <div>
-      <p className="text-md md:text-lg font-medium text-tsu-text-primary mb-1.5">{title}</p>
+      <p className="text-sm md:text-md font-medium text-tsu-text-primary mb-1.5">{title}</p>
       <p className="text-md text-tsu-text-secondary leading-relaxed">{body}</p>
     </div>
   );

@@ -39,7 +39,7 @@ export function ReviewDecision({ thesisId }: { thesisId: string }) {
   return (
     <div className="space-y-4">
       {error && (
-        <div className="bg-red-950 text-red-400 text-md md:text-lg rounded-lg p-3">{error}</div>
+        <div className="bg-red-950 text-red-400 text-sm md:text-md rounded-lg p-3">{error}</div>
       )}
 
       {!showRejectForm ? (
@@ -47,14 +47,14 @@ export function ReviewDecision({ thesisId }: { thesisId: string }) {
           <button
             onClick={handleApprove}
             disabled={isPending}
-            className="flex-1 bg-tsu-success-bg text-tsu-success-text font-medium text-md md:text-lg py-3 rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
+            className="flex-1 bg-tsu-success-bg text-tsu-success-text font-medium text-sm md:text-md py-3 rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
           >
             {isPending ? "Approving…" : "Approve & publish"}
           </button>
           <button
             onClick={() => setShowRejectForm(true)}
             disabled={isPending}
-            className="flex-1 bg-transparent border border-red-900 text-red-400 font-medium text-md md:text-lg py-3 rounded-lg hover:bg-red-950 transition-colors disabled:opacity-50"
+            className="flex-1 bg-transparent border border-red-900 text-red-400 font-medium text-sm md:text-md py-3 rounded-lg hover:bg-red-950 transition-colors disabled:opacity-50"
           >
             Reject
           </button>
@@ -70,21 +70,21 @@ export function ReviewDecision({ thesisId }: { thesisId: string }) {
             rows={3}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+            className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
             placeholder="e.g. Abstract does not match the final defense copy on file."
           />
           <div className="flex gap-3">
             <button
               type="submit"
               disabled={isPending}
-              className="bg-red-950 text-red-400 font-medium text-md md:text-lg px-5 py-2.5 rounded-lg hover:bg-red-900 transition-colors disabled:opacity-50"
+              className="bg-red-950 text-red-400 font-medium text-sm md:text-md px-5 py-2.5 rounded-lg hover:bg-red-900 transition-colors disabled:opacity-50"
             >
               {isPending ? "Submitting…" : "Confirm rejection"}
             </button>
             <button
               type="button"
               onClick={() => setShowRejectForm(false)}
-              className="text-tsu-text-muted text-md md:text-lg px-5 py-2.5 hover:text-tsu-text-secondary"
+              className="text-tsu-text-muted text-sm md:text-md px-5 py-2.5 hover:text-tsu-text-secondary"
             >
               Cancel
             </button>

@@ -53,7 +53,7 @@ export default async function AdminQueuePage({
             <Link
               key={tab.value}
               href={`/admin?status=${tab.value}`}
-              className={`text-md md:text-lg font-medium px-4 py-2 rounded-pill transition-colors ${
+              className={`text-sm md:text-md font-medium px-4 py-2 rounded-pill transition-colors ${
                 activeStatus === tab.value
                   ? "bg-tsu-accent text-white"
                   : "bg-tsu-card border border-tsu-card-border text-tsu-text-secondary hover:text-tsu-text-primary"
@@ -65,14 +65,14 @@ export default async function AdminQueuePage({
         </div>
 
         {error && (
-          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-md md:text-lg">
+          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-sm md:text-md">
             Could not load submissions: {error.message}
           </div>
         )}
 
         {!error && (!theses || theses.length === 0) && (
           <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-md md:text-lg">
+            <p className="text-tsu-text-secondary text-sm md:text-md">
               Nothing {activeStatus === "all" ? "" : activeStatus} right now.
             </p>
           </div>
@@ -87,7 +87,7 @@ export default async function AdminQueuePage({
                 className="bg-tsu-card border border-tsu-card-border rounded-card p-5 flex items-center justify-between hover:border-tsu-accent transition-colors group"
               >
                 <div className="min-w-0">
-                  <p className="text-md md:text-lg font-medium text-tsu-text-heading truncate">{t.title}</p>
+                  <p className="text-sm md:text-md font-medium text-tsu-text-heading truncate">{t.title}</p>
                   <p className="text-md text-tsu-text-muted mt-1.5">
                     {t.author?.full_name} &middot; {t.department?.name} &middot; {t.programme?.name} &middot; {t.year}
                   </p>

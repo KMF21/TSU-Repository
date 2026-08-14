@@ -34,7 +34,7 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-5 flex-shrink-0">
           <Link
             href="/browse"
-            className="text-md md:text-lg text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
+            className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
           >
             Browse research
           </Link>
@@ -42,13 +42,13 @@ export function Header() {
           <SignedIn>
             <Link
               href="/dashboard"
-              className="text-md md:text-lg text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
+              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
             >
               My submissions
             </Link>
             <Link
               href="/submit"
-              className="text-md md:text-lg text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
+              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
             >
               Submit research
             </Link>
@@ -57,7 +57,7 @@ export function Header() {
 
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md md:text-lg font-medium px-4 py-2 rounded-pill hover:bg-tsu-accent hover:text-white transition-colors">
+              <button className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm md:text-md font-medium px-4 py-2 rounded-pill hover:bg-tsu-accent hover:text-white transition-colors">
                 Sign in
               </button>
             </SignInButton>
@@ -94,7 +94,7 @@ export function Header() {
           <Link
             href="/browse"
             onClick={() => setMenuOpen(false)}
-            className="text-md md:text-lg text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
+            className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
           >
             Browse research
           </Link>
@@ -103,14 +103,14 @@ export function Header() {
             <Link
               href="/dashboard"
               onClick={() => setMenuOpen(false)}
-              className="text-md md:text-lg text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
+              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
             >
               My submissions
             </Link>
             <Link
               href="/submit"
               onClick={() => setMenuOpen(false)}
-              className="text-md md:text-lg text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
+              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
             >
               Submit research
             </Link>
@@ -120,7 +120,7 @@ export function Header() {
             <SignInButton mode="modal">
               <button
                 onClick={() => setMenuOpen(false)}
-                className="mt-2 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md md:text-lg font-medium px-4 py-2.5 rounded-lg hover:bg-tsu-accent hover:text-white transition-colors text-left"
+                className="mt-2 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm md:text-md font-medium px-4 py-2.5 rounded-lg hover:bg-tsu-accent hover:text-white transition-colors text-left"
               >
                 Sign in
               </button>

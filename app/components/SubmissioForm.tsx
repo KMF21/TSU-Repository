@@ -134,7 +134,7 @@ export function SubmissionForm({
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
               placeholder="Full thesis title, as it appears on the title page"
             />
 
@@ -147,7 +147,7 @@ export function SubmissionForm({
               rows={5}
               value={abstract}
               onChange={(e) => setAbstract(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-secondary leading-relaxed mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-secondary leading-relaxed mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
               placeholder="Paste the abstract exactly as submitted in your final defense copy"
             />
 
@@ -158,7 +158,7 @@ export function SubmissionForm({
               id="keywords"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary mb-2 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary mb-2 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
               placeholder="Separate with commas — e.g. urban planning, Jalingo"
             />
             {keywordChips.length > 0 && (
@@ -193,7 +193,7 @@ export function SubmissionForm({
                     setDepartmentId(e.target.value);
                     setProgrammeId("");
                   }}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                 >
                   <option value="">Select department</option>
                   {departments.map((d) => (
@@ -214,7 +214,7 @@ export function SubmissionForm({
                   value={programmeId}
                   onChange={(e) => setProgrammeId(e.target.value)}
                   disabled={!departmentId}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent disabled:opacity-40"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent disabled:opacity-40"
                 >
                   <option value="">Select programme</option>
                   {filteredProgrammes.map((p) => (
@@ -237,7 +237,7 @@ export function SubmissionForm({
                   max={new Date().getFullYear()}
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                 />
               </div>
 
@@ -250,7 +250,7 @@ export function SubmissionForm({
                   required
                   value={supervisorName}
                   onChange={(e) => setSupervisorName(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                   placeholder="e.g. Prof. A. B. Sample"
                 />
               </div>
@@ -263,7 +263,7 @@ export function SubmissionForm({
                   required
                   value={matricNumber}
                   onChange={(e) => setMatricNumber(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-md md:text-lg text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
                   placeholder="e.g. TSU/PG/2023/0142"
                 />
               </div>
@@ -288,14 +288,14 @@ export function SubmissionForm({
               <div className="flex-1 min-w-0">
                 {file ? (
                   <>
-                    <p className="text-md md:text-lg text-tsu-text-primary truncate">{file.name}</p>
+                    <p className="text-sm md:text-md text-tsu-text-primary truncate">{file.name}</p>
                     <p className="text-md text-tsu-text-muted mt-0.5">
                       {(file.size / (1024 * 1024)).toFixed(1)}MB · PDF
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-md md:text-lg text-tsu-text-secondary">Choose a PDF to upload</p>
+                    <p className="text-sm md:text-md text-tsu-text-secondary">Choose a PDF to upload</p>
                     <p className="text-md text-tsu-text-muted mt-0.5">
                       Up to 50MB. Large files should be compressed first — see the note below.
                     </p>
@@ -342,7 +342,7 @@ export function SubmissionForm({
 
           {result && (
             <div
-              className={`rounded-lg p-4 text-md md:text-lg ${
+              className={`rounded-lg p-4 text-sm md:text-md ${
                 result.success
                   ? "bg-tsu-success-bg text-tsu-success-text"
                   : "bg-red-950 text-red-400"
@@ -355,7 +355,7 @@ export function SubmissionForm({
           <button
             type="submit"
             disabled={isPending || !!fileError}
-            className="w-full bg-tsu-accent text-white text-md md:text-lg font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full bg-tsu-accent text-white text-sm md:text-md font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {isPending ? "Submitting…" : "Submit for review"}
           </button>
@@ -379,7 +379,7 @@ export function SubmissionForm({
             How this will be cited
           </p>
           <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-5">
-            <p className="font-display text-md md:text-lg leading-relaxed text-tsu-text-primary">
+            <p className="font-display text-sm md:text-md leading-relaxed text-tsu-text-primary">
               {authorName || "Author name"}. ({year || "Year"}).{" "}
               <span className="italic">{title || "Thesis title"}</span>.{" "}
               {selectedProgramme ? DEGREE_LABELS[selectedProgramme.degree_type] : "Degree"} thesis,{" "}
@@ -422,7 +422,7 @@ function StepRow({
           number
         )}
       </div>
-      <p className={`text-md md:text-lg ${textClass}`}>{label}</p>
+      <p className={`text-sm md:text-md ${textClass}`}>{label}</p>
     </div>
   );
 }

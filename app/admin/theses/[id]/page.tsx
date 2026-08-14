@@ -50,7 +50,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
           </div>
 
           <h1 className="text-xl md:text-2xl font-semibold text-tsu-text-heading mb-1">{thesis.title}</h1>
-          <p className="text-md md:text-lg text-tsu-text-muted mb-6">
+          <p className="text-sm md:text-md text-tsu-text-muted mb-6">
             {author?.full_name} &middot; {author?.matric_number || "No matric number on file"}
           </p>
 
@@ -58,7 +58,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               Academic record
             </p>
-            <dl className="grid grid-cols-2 gap-y-3 text-md md:text-lg">
+            <dl className="grid grid-cols-2 gap-y-3 text-sm md:text-md">
               <dt className="text-tsu-text-muted">Department</dt>
               <dd className="text-tsu-text-primary text-right">{department?.name}</dd>
               <dt className="text-tsu-text-muted">Programme</dt>
@@ -76,7 +76,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               Abstract
             </p>
-            <p className="text-md md:text-lg text-tsu-text-secondary leading-relaxed">{thesis.abstract}</p>
+            <p className="text-sm md:text-md text-tsu-text-secondary leading-relaxed">{thesis.abstract}</p>
             {thesis.keywords?.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-4">
                 {thesis.keywords.map((k: string) => (
@@ -93,7 +93,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
 
           <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-5 mb-6 flex items-center justify-between">
             <div>
-              <p className="text-md md:text-lg text-tsu-text-primary">{thesis.original_filename}</p>
+              <p className="text-sm md:text-md text-tsu-text-primary">{thesis.original_filename}</p>
               <p className="text-md text-tsu-text-muted mt-0.5">
                 {thesis.file_size_bytes ? (thesis.file_size_bytes / (1024 * 1024)).toFixed(1) : "?"}MB
               </p>

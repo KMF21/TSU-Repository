@@ -75,7 +75,7 @@ export default async function ThesisDetailPage({
           <h1 className="text-xl md:text-2xl font-semibold text-tsu-text-heading mb-2 leading-snug">
             {thesis.title}
           </h1>
-          <p className="text-md md:text-lg text-tsu-text-secondary mb-1">
+          <p className="text-sm md:text-md text-tsu-text-secondary mb-1">
             {author?.full_name}
           </p>
           <p className="text-md text-tsu-text-muted mb-6">
@@ -90,7 +90,7 @@ export default async function ThesisDetailPage({
             <ExpandableText
               text={thesis.abstract}
               maxLength={400}
-              className="text-md md:text-lg text-tsu-text-secondary leading-relaxed"
+              className="text-sm md:text-md text-tsu-text-secondary leading-relaxed"
             />
             {thesis.keywords?.length > 0 && (
               <div className="flex gap-2 flex-wrap mt-4">
@@ -110,7 +110,7 @@ export default async function ThesisDetailPage({
             <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
               How to cite this
             </p>
-            <p className="font-display text-md md:text-lg leading-relaxed text-tsu-text-primary">
+            <p className="font-display text-sm md:text-md leading-relaxed text-tsu-text-primary">
               {citation}
             </p>
             <p className="text-md text-tsu-text-muted mt-4 pt-3 border-t border-tsu-card-border">
@@ -124,13 +124,13 @@ export default async function ThesisDetailPage({
               href={fileUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full text-center bg-tsu-accent text-white text-md md:text-lg font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity"
+              className="block w-full text-center bg-tsu-accent text-white text-sm md:text-md font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity"
             >
               Download PDF
             </a>
           ) : (
             <div className="bg-tsu-input-bg border border-tsu-input-border rounded-lg p-4 text-center">
-              <p className="text-md md:text-lg text-tsu-text-muted">
+              <p className="text-sm md:text-md text-tsu-text-muted">
                 Sign in with your TSU account to download this thesis.
               </p>
             </div>
