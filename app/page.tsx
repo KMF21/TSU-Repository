@@ -79,7 +79,7 @@ export default function HomePage() {
           </h2>
         </div>
         <div className="grid gap-4 sm:grid-cols-3 sm:gap-6">
-          <StatCard label="Faculties represented" value="10" />
+          <StatCard label="Faculties represented" value="12" />
           <StatCard label="Departments" value="37" />
           <StatCard label="Programmes covered" value="254" />
         </div>
