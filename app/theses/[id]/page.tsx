@@ -18,17 +18,20 @@ import { DEGREE_LABELS, INSTITUTION, SITE_NAME, SITE_URL } from "@/lib/site";
  */
 const getThesis = cache(async (id: string) => {
   const supabase = await createServerSupabaseClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("theses")
     .select(
       `id, title, abstract, keywords, year, degree_type, supervisor_name, access_level,
-       author_id, view_count, download_count, published_at, updated_at,
+       author_id, view_count, download_count,
        department:departments ( name, faculty ),
        programme:programmes ( name )`
     )
     .eq("id", id)
     .eq("status", "published")
     .maybeSingle();
+  // A real query failure must not look like "not found": log it so it shows
+  // up in Vercel's function logs instead of silently producing a 404.
+  if (error) console.error("getThesis failed:", error.message);
   return data;
 });
 
