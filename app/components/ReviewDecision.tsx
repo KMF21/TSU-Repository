@@ -38,53 +38,51 @@ export function ReviewDecision({ thesisId }: { thesisId: string }) {
 
   return (
     <div className="space-y-4">
-      {error && (
-        <div className="bg-red-950 text-red-400 text-sm md:text-md rounded-lg p-3">{error}</div>
-      )}
+      {error && <div className="alert-error">{error}</div>}
 
       {!showRejectForm ? (
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           <button
             onClick={handleApprove}
             disabled={isPending}
-            className="flex-1 bg-tsu-success-bg text-tsu-success-text font-medium text-sm md:text-md py-3 rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
+            className="btn-success flex-1 py-3.5"
           >
             {isPending ? "Approving…" : "Approve & publish"}
           </button>
           <button
             onClick={() => setShowRejectForm(true)}
             disabled={isPending}
-            className="flex-1 bg-transparent border border-red-900 text-red-400 font-medium text-sm md:text-md py-3 rounded-lg hover:bg-red-950 transition-colors disabled:opacity-50"
+            className="btn-danger flex-1 py-3.5"
           >
             Reject
           </button>
         </div>
       ) : (
-        <form onSubmit={handleReject} className="space-y-3 bg-tsu-bg border border-tsu-card-border rounded-card p-5">
-          <label className="block text-md text-tsu-text-secondary" htmlFor="reason">
+        <form onSubmit={handleReject} className="panel space-y-4 p-5 sm:p-6">
+          <label className="field-label" htmlFor="reason">
             Reason for rejection (shown to the student)
           </label>
           <textarea
             id="reason"
             required
-            rows={3}
+            rows={4}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+            className="field"
             placeholder="e.g. Abstract does not match the final defense copy on file."
           />
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <button
               type="submit"
               disabled={isPending}
-              className="bg-red-950 text-red-400 font-medium text-sm md:text-md px-5 py-2.5 rounded-lg hover:bg-red-900 transition-colors disabled:opacity-50"
+              className="btn bg-red-950 text-red-300 hover:bg-red-900"
             >
               {isPending ? "Submitting…" : "Confirm rejection"}
             </button>
             <button
               type="button"
               onClick={() => setShowRejectForm(false)}
-              className="text-tsu-text-muted text-sm md:text-md px-5 py-2.5 hover:text-tsu-text-secondary"
+              className="btn text-tsu-text-secondary hover:text-white"
             >
               Cancel
             </button>

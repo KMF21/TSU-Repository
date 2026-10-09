@@ -1,16 +1,12 @@
+import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { DEGREE_LABELS } from "@/lib/site";
 
-const DEGREE_LABELS: Record<string, string> = {
-  bsc: "B.Sc.",
-  msc: "M.Sc.",
-  ma: "M.A.",
-  med: "M.Ed.",
-  pgd: "PGD",
-  mphil: "M.Phil.",
-  phd: "Ph.D.",
-  other: "Other",
+export const metadata: Metadata = {
+  title: "My submissions",
+  robots: { index: false, follow: false },
 };
 
 export default async function DashboardPage() {
@@ -30,36 +26,30 @@ export default async function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-tsu-bg">
-      <div className="max-w-2xl mx-auto px-6 py-10">
-        <div className="flex items-center justify-between mb-7">
+      <div className="mx-auto max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
+        <div className="mb-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-md text-tsu-text-muted mb-1">Your submissions</p>
-            <h1 className="text-2xl md:text-4xl font-semibold text-tsu-text-heading">Hello, {firstName}</h1>
+            <p className="eyebrow mb-3">Your submissions</p>
+            <h1 className="page-title">Hello, {firstName}</h1>
           </div>
-          <Link
-            href="/submit"
-            className="bg-tsu-accent text-white text-sm md:text-md font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
-          >
+          <Link href="/submit" className="btn-primary self-start sm:self-auto">
             Submit research
           </Link>
         </div>
 
         {(!theses || theses.length === 0) && (
-          <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-sm md:text-md mb-4">
-              You haven't submitted any research yet.
+          <div className="card p-10 text-center sm:p-14">
+            <p className="mb-6 text-lg text-tsu-text-secondary">
+              You haven&apos;t submitted any research yet.
             </p>
-            <Link
-              href="/submit"
-              className="inline-block bg-tsu-accent text-white text-sm md:text-md font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
-            >
+            <Link href="/submit" className="btn-primary">
               Submit your first thesis
             </Link>
           </div>
         )}
 
         {theses && theses.length > 0 && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-5">
             {theses.map((t: any) => (
               <SubmissionCard key={t.id} thesis={t} />
             ))}
@@ -77,32 +67,34 @@ function SubmissionCard({ thesis }: { thesis: any }) {
     { label: "Published to the repository", key: "published" },
   ];
 
-  const currentStepIndex =
-    thesis.status === "published" ? 2 : thesis.status === "rejected" ? 1 : 1;
+  const currentStepIndex = thesis.status === "published" ? 2 : 1;
 
   return (
-    <div className="bg-tsu-card border border-tsu-card-border rounded-card p-6">
-      <div className="flex items-start justify-between mb-4">
-        <div className="min-w-0 pr-4">
-          <p className="text-sm md:text-md font-medium text-tsu-text-heading">{thesis.title}</p>
-          <p className="text-md text-tsu-text-muted mt-1">
-            {thesis.department?.name} &middot; {DEGREE_LABELS[thesis.degree_type]} &middot; {thesis.year}
+    <div className="card p-6 sm:p-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="font-display text-xl font-semibold leading-snug text-white sm:text-2xl">
+            {thesis.title}
+          </h2>
+          <p className="mt-2 text-base text-tsu-text-secondary">
+            {thesis.department?.name} &middot; {DEGREE_LABELS[thesis.degree_type]} &middot;{" "}
+            {thesis.year}
           </p>
         </div>
-        <StatusPill status={thesis.status} />
+        <div className="self-start">
+          <StatusPill status={thesis.status} />
+        </div>
       </div>
 
       {thesis.status === "rejected" && thesis.rejection_reason && (
-        <div className="bg-red-950 rounded-lg p-3.5 mb-4">
-          <p className="text-md text-red-400 leading-relaxed">
-            <span className="font-medium">Reason: </span>
-            {thesis.rejection_reason}
-          </p>
+        <div className="alert-error mt-5">
+          <span className="font-semibold">Reason: </span>
+          {thesis.rejection_reason}
         </div>
       )}
 
       {thesis.status !== "rejected" && (
-        <div className="flex flex-col gap-2.5 pt-2">
+        <div className="mt-6 flex flex-col gap-3.5 border-t border-tsu-card-border pt-6">
           {steps.map((step, i) => (
             <StepRow
               key={step.key}
@@ -117,7 +109,7 @@ function SubmissionCard({ thesis }: { thesis: any }) {
       {thesis.status === "published" && (
         <Link
           href={`/theses/${thesis.id}`}
-          className="inline-block mt-4 text-md text-tsu-accent-tag-text hover:underline"
+          className="mt-6 inline-flex items-center gap-2 text-base font-semibold text-tsu-accent-tag-text transition-colors hover:text-white"
         >
           View public listing &rarr;
         </Link>
@@ -127,25 +119,9 @@ function SubmissionCard({ thesis }: { thesis: any }) {
 }
 
 function StatusPill({ status }: { status: string }) {
-  if (status === "published") {
-    return (
-      <span className="flex-shrink-0 bg-tsu-success-bg text-tsu-success-text text-md font-medium px-3.5 py-1.5 rounded-pill">
-        Published
-      </span>
-    );
-  }
-  if (status === "rejected") {
-    return (
-      <span className="flex-shrink-0 bg-red-950 text-red-400 text-md font-medium px-3.5 py-1.5 rounded-pill">
-        Rejected
-      </span>
-    );
-  }
-  return (
-    <span className="flex-shrink-0 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md font-medium px-3.5 py-1.5 rounded-pill">
-      Pending review
-    </span>
-  );
+  if (status === "published") return <span className="pill-green">Published</span>;
+  if (status === "rejected") return <span className="pill-red">Rejected</span>;
+  return <span className="pill-blue">Pending review</span>;
 }
 
 function StepRow({
@@ -172,17 +148,19 @@ function StepRow({
       : "text-tsu-text-muted";
 
   return (
-    <div className="flex items-center gap-3">
-      <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] ${circleClass}`}>
+    <div className="flex items-center gap-3.5">
+      <div
+        className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold ${circleClass}`}
+      >
         {state === "done" ? (
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M20 6L9 17l-5-5" />
           </svg>
         ) : (
           number
         )}
       </div>
-      <p className={`text-md ${textClass}`}>{label}</p>
+      <p className={`text-base sm:text-[17px] ${textClass}`}>{label}</p>
     </div>
   );
 }

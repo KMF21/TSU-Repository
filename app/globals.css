@@ -2,39 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+/* Fonts (Inter, Source Serif 4, IBM Plex Mono) are loaded with <link> tags
+   in app/layout.tsx so they never block the build and CSS @import ordering
+   rules cannot silently drop them. */
 
 :root {
-  /* Rebuilt to match the live Screening Portal (tsucpgs.com.ng) —
-     dark navy dashboard language, rounded cards, pill badges — rather
-     than a standalone academic-parchment look. */
+  /* Dark navy dashboard language, shared with the Screening Portal. */
   --tsu-bg: #0b1220;
   --tsu-card: #111a2e;
   --tsu-card-border: #1e2a42;
-  --tsu-input-bg: #0b1220;
-  --tsu-input-border: #223452;
-
   --tsu-text-primary: #e8eaed;
-  --tsu-text-heading: #ffffff;
-  --tsu-text-secondary: #96a0b0;
-  --tsu-text-muted: #7c8798;
+}
 
-  --tsu-accent-fill: #2563eb;
-  --tsu-accent-tag-bg: #132038;
-  --tsu-accent-tag-text: #7ca8e0;
-
-  --tsu-success-bg: #0f2a1c;
-  --tsu-success-text: #4ade80;
-
-  /* Reserved exclusively for the "Published" status badge — nowhere else. */
-  --tsu-gold-bg: #2a2010;
-  --tsu-gold-text: #d4a017;
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: var(--tsu-bg);
   color: var(--tsu-text-primary);
   font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(37, 99, 235, 0.45);
+  color: #fff;
 }
 
 .font-display {
@@ -43,4 +41,101 @@ body {
 
 .font-mono {
   font-family: 'IBM Plex Mono', monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Shared building blocks. Every page uses these so the whole repository
+   keeps one consistent, larger type scale and button/field language.
+------------------------------------------------------------------- */
+@layer components {
+  .eyebrow {
+    @apply text-xs sm:text-[13px] font-semibold uppercase tracking-[0.2em] text-tsu-accent-tag-text;
+  }
+
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-tsu-text-muted;
+  }
+
+  .page-title {
+    @apply font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white leading-[1.15];
+  }
+
+  .card {
+    @apply bg-tsu-card border border-tsu-card-border rounded-card shadow-card;
+  }
+
+  .panel {
+    @apply bg-tsu-bg/70 border border-tsu-card-border rounded-card;
+  }
+
+  .field-label {
+    @apply block text-sm sm:text-[15px] font-medium text-tsu-text-primary mb-2;
+  }
+
+  .field {
+    @apply w-full bg-tsu-input-bg border border-tsu-input-border rounded-xl px-4 py-3 text-base text-tsu-text-primary placeholder:text-tsu-text-muted transition focus:outline-none focus:border-tsu-accent focus:ring-2 focus:ring-tsu-accent/30 disabled:opacity-40;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tsu-accent/60 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-tsu-accent text-white shadow-glow hover:bg-blue-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-white/5 border border-white/15 text-white hover:bg-white/10;
+  }
+
+  .btn-success {
+    @apply btn bg-tsu-success-bg text-tsu-success-text border border-green-900/50 hover:brightness-125;
+  }
+
+  .btn-danger {
+    @apply btn bg-transparent border border-red-900 text-red-400 hover:bg-red-950;
+  }
+
+  .pill {
+    @apply inline-flex items-center rounded-pill px-3.5 py-1.5 text-sm font-semibold whitespace-nowrap;
+  }
+
+  .pill-blue {
+    @apply pill bg-tsu-accent-tag-bg text-tsu-accent-tag-text;
+  }
+
+  .pill-green {
+    @apply pill bg-tsu-success-bg text-tsu-success-text;
+  }
+
+  /* Gold stays reserved for restricted / published-restricted states. */
+  .pill-gold {
+    @apply pill bg-tsu-gold-bg text-tsu-gold-text;
+  }
+
+  .pill-red {
+    @apply pill bg-red-950 text-red-400;
+  }
+
+  .chip {
+    @apply inline-flex items-center rounded-pill bg-tsu-accent-tag-bg px-3.5 py-1.5 text-sm text-tsu-accent-tag-text;
+  }
+
+  .alert-error {
+    @apply rounded-xl bg-red-950 text-red-300 border border-red-900/60 p-4 text-base;
+  }
+
+  .alert-success {
+    @apply rounded-xl bg-tsu-success-bg text-tsu-success-text border border-green-900/50 p-4 text-base;
+  }
 }

@@ -4,9 +4,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
-const siteUrl = "https://tsu-repository.vercel.app";
-const siteName = "TSU Digital Research Repository";
+const siteUrl = SITE_URL;
+const siteName = SITE_NAME;
 const siteDescription =
   "The official digital repository of Taraba State University postgraduate research — theses, dissertations, and scholarly work from every faculty, archived, searchable, and citable.";
 
@@ -69,9 +70,6 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: ["/assets/tsu_logo1.png"],
   },
-  alternates: {
-    canonical: siteUrl,
-  },
   other: {
     "theme-color": "#185fa5",
   },
@@ -81,6 +79,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,500&family=IBM+Plex+Mono:wght@400;500&display=swap"
+          />
+        </head>
         <body className="flex flex-col min-h-screen">
           <Header />
           <div className="flex-1">{children}</div>

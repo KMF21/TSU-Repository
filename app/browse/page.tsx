@@ -1,15 +1,14 @@
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
 import Link from "next/link";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getAuthorNames } from "@/lib/publicAuthors";
+import { DEGREE_LABELS, SITE_URL } from "@/lib/site";
 
-const DEGREE_LABELS: Record<string, string> = {
-  bsc: "B.Sc.",
-  msc: "M.Sc.",
-  ma: "M.A.",
-  med: "M.Ed.",
-  pgd: "PGD",
-  mphil: "M.Phil.",
-  phd: "Ph.D.",
-  other: "Other",
+export const metadata: Metadata = {
+  title: "Browse research",
+  description:
+    "Search and browse postgraduate theses and dissertations from Taraba State University by title, abstract, keyword, department or degree.",
+  alternates: { canonical: `${SITE_URL}/browse` },
 };
 
 export default async function BrowsePage({
@@ -28,8 +27,7 @@ export default async function BrowsePage({
   let query = supabase
     .from("theses")
     .select(
-      `id, title, year, degree_type,
-       author:users!theses_author_id_fkey ( full_name ),
+      `id, title, abstract, keywords, year, degree_type, author_id,
        department:departments ( name )`
     )
     .eq("status", "published")
@@ -45,28 +43,41 @@ export default async function BrowsePage({
   }
 
   const { data: theses, error } = await query;
+  const authorNames = await getAuthorNames((theses ?? []).map((t: any) => t.author_id));
+  const hasFilters = !!(q || department || degree);
 
   return (
     <main className="min-h-screen bg-tsu-bg">
-      <div className="max-w-4xl mx-auto px-6 py-10">
-        <p className="text-md text-tsu-text-muted mb-1">Search the archive</p>
-        <h1 className="text-2xl md:text-4xl font-semibold text-tsu-text-heading mb-7">Browse research</h1>
+      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+        <p className="eyebrow mb-3">Search the archive</p>
+        <h1 className="page-title mb-8 sm:mb-10">Browse research</h1>
 
         {/* Search + filters */}
-        <form method="GET" className="bg-tsu-card border border-tsu-card-border rounded-card p-5 mb-6">
-          <input
-            type="text"
-            name="q"
-            defaultValue={q}
-            placeholder="Search by title, abstract, or keyword"
-            className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary mb-3 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
-          />
-          <div className="grid grid-cols-2 gap-3">
-            <select
-              name="department"
-              defaultValue={department ?? ""}
-              className="bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+        <form method="GET" className="card mb-8 p-5 sm:p-7">
+          <div className="relative">
+            <svg
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tsu-text-muted"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
             >
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg>
+            <input
+              type="text"
+              name="q"
+              defaultValue={q}
+              placeholder="Search by title, abstract, or keyword"
+              className="field !pl-12 sm:py-4 sm:text-lg"
+            />
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] lg:items-center">
+            <select name="department" defaultValue={department ?? ""} className="field">
               <option value="">All departments</option>
               {departments?.map((d) => (
                 <option key={d.id} value={d.id}>
@@ -74,11 +85,7 @@ export default async function BrowsePage({
                 </option>
               ))}
             </select>
-            <select
-              name="degree"
-              defaultValue={degree ?? ""}
-              className="bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
-            >
+            <select name="degree" defaultValue={degree ?? ""} className="field">
               <option value="">All degree types</option>
               {Object.entries(DEGREE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -86,47 +93,72 @@ export default async function BrowsePage({
                 </option>
               ))}
             </select>
+            <div className="flex gap-3 sm:col-span-2 lg:col-span-1">
+              <button type="submit" className="btn-primary flex-1 lg:flex-none">
+                Search
+              </button>
+              {hasFilters && (
+                <Link href="/browse" className="btn-secondary">
+                  Reset
+                </Link>
+              )}
+            </div>
           </div>
-          <button
-            type="submit"
-            className="mt-3 bg-tsu-accent text-white text-sm md:text-md font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
-          >
-            Search
-          </button>
         </form>
 
-        {error && (
-          <div className="bg-red-950 text-red-400 rounded-lg p-4 text-sm md:text-md">
-            Could not load results: {error.message}
-          </div>
-        )}
+        {error && <div className="alert-error">Could not load results: {error.message}</div>}
 
         {!error && (!theses || theses.length === 0) && (
-          <div className="bg-tsu-card border border-tsu-card-border rounded-card p-10 text-center">
-            <p className="text-tsu-text-secondary text-sm md:text-md">
-              {q || department || degree
-                ? "No results match your search."
-                : "No published research yet."}
+          <div className="card p-10 text-center sm:p-14">
+            <p className="text-lg text-tsu-text-secondary">
+              {hasFilters ? "No results match your search." : "No published research yet."}
             </p>
           </div>
         )}
 
         {theses && theses.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {theses.map((t: any) => (
-              <Link
-                key={t.id}
-                href={`/theses/${t.id}`}
-                className="bg-tsu-card border border-tsu-card-border rounded-card p-5 hover:border-tsu-accent transition-colors"
-              >
-                <p className="text-sm md:text-md font-medium text-tsu-text-heading mb-1.5">{t.title}</p>
-                <p className="text-md text-tsu-text-muted">
-                  {t.author?.full_name} &middot; {t.department?.name} &middot;{" "}
-                  {DEGREE_LABELS[t.degree_type]} &middot; {t.year}
-                </p>
-              </Link>
-            ))}
-          </div>
+          <>
+            <p className="mb-4 text-base text-tsu-text-muted">
+              {theses.length} {theses.length === 1 ? "result" : "results"}
+            </p>
+            <div className="flex flex-col gap-4">
+              {theses.map((t: any) => (
+                <Link
+                  key={t.id}
+                  href={`/theses/${t.id}`}
+                  className="card group block p-6 transition-colors hover:border-tsu-accent hover:bg-tsu-card-hover sm:p-8"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <h2 className="font-display text-xl font-semibold leading-snug text-white sm:text-2xl">
+                      {t.title}
+                    </h2>
+                    <span className="flex-shrink-0 pt-1 text-tsu-text-muted transition-all group-hover:translate-x-1 group-hover:text-tsu-accent-tag-text">
+                      &rarr;
+                    </span>
+                  </div>
+
+                  <p className="mt-2 text-base text-tsu-text-secondary sm:text-[17px]">
+                    {authorNames[t.author_id] ?? "Unknown author"} &middot; {t.department?.name}{" "}
+                    &middot; {DEGREE_LABELS[t.degree_type]} &middot; {t.year}
+                  </p>
+
+                  <p className="mt-4 line-clamp-2 text-base leading-relaxed text-tsu-text-muted sm:text-[17px]">
+                    {t.abstract}
+                  </p>
+
+                  {t.keywords?.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {t.keywords.slice(0, 4).map((k: string) => (
+                        <span key={k} className="chip">
+                          {k}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </>
         )}
       </div>
     </main>

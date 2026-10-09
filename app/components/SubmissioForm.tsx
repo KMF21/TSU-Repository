@@ -2,20 +2,10 @@
 
 import { useState, useMemo, useTransition } from "react";
 import { submitThesis } from "@/lib/actions/submitThesis";
+import { DEGREE_LABELS } from "@/lib/site";
 
 type Department = { id: string; name: string; faculty: string };
 type Programme = { id: string; name: string; degree_type: string; department_id: string };
-
-const DEGREE_LABELS: Record<string, string> = {
-  bsc: "B.Sc.",
-  msc: "M.Sc.",
-  ma: "M.A.",
-  med: "M.Ed.",
-  pgd: "PGD",
-  mphil: "M.Phil.",
-  phd: "Ph.D.",
-  other: "Other",
-};
 
 export function SubmissionForm({
   departments,
@@ -106,27 +96,22 @@ export function SubmissionForm({
   const fileReady = !!file && !fileError;
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-10">
-      <div className="bg-tsu-card border border-tsu-card-border rounded-card p-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-7">
-          <div>
-            <p className="text-md text-tsu-text-muted mb-1">Deposit</p>
-            <h1 className="text-2xl md:text-4xl font-semibold text-tsu-text-heading">Submit your research</h1>
-          </div>
-          <span className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md font-medium px-3.5 py-1.5 rounded-pill border border-tsu-input-border">
-            Draft
-          </span>
+    <div className="mx-auto max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div>
+          <p className="eyebrow mb-3">Deposit</p>
+          <h1 className="page-title">Submit your research</h1>
         </div>
+        <span className="pill-blue hidden border border-tsu-input-border sm:inline-flex">Draft</span>
+      </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="card p-5 sm:p-10">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Thesis details */}
-          <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-6">
-            <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-4">
-              Thesis details
-            </p>
+          <div className="panel p-5 sm:p-7">
+            <p className="section-label mb-5">Thesis details</p>
 
-            <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="title">
+            <label className="field-label" htmlFor="title">
               Title
             </label>
             <input
@@ -134,40 +119,37 @@ export function SubmissionForm({
               required
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="field mb-5"
               placeholder="Full thesis title, as it appears on the title page"
             />
 
-            <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="abstract">
+            <label className="field-label" htmlFor="abstract">
               Abstract
             </label>
             <textarea
               id="abstract"
               required
-              rows={5}
+              rows={8}
               value={abstract}
               onChange={(e) => setAbstract(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-secondary leading-relaxed mb-4 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="field mb-5 leading-relaxed"
               placeholder="Paste the abstract exactly as submitted in your final defense copy"
             />
 
-            <label className="block text-md text-tsu-text-secondary mb-2" htmlFor="keywords">
+            <label className="field-label" htmlFor="keywords">
               Keywords
             </label>
             <input
               id="keywords"
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
-              className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary mb-2 focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+              className="field"
               placeholder="Separate with commas — e.g. urban planning, Jalingo"
             />
             {keywordChips.length > 0 && (
-              <div className="flex gap-2 flex-wrap mt-2">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {keywordChips.map((k) => (
-                  <span
-                    key={k}
-                    className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-md px-3 py-1 rounded-pill"
-                  >
+                  <span key={k} className="chip">
                     {k}
                   </span>
                 ))}
@@ -176,13 +158,11 @@ export function SubmissionForm({
           </div>
 
           {/* Academic record */}
-          <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-6">
-            <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-4">
-              Academic record
-            </p>
-            <div className="grid grid-cols-2 gap-4">
+          <div className="panel p-5 sm:p-7">
+            <p className="section-label mb-5">Academic record</p>
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="department">
+                <label className="field-label" htmlFor="department">
                   Department
                 </label>
                 <select
@@ -193,7 +173,7 @@ export function SubmissionForm({
                     setDepartmentId(e.target.value);
                     setProgrammeId("");
                   }}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="field"
                 >
                   <option value="">Select department</option>
                   {departments.map((d) => (
@@ -205,7 +185,7 @@ export function SubmissionForm({
               </div>
 
               <div>
-                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="programme">
+                <label className="field-label" htmlFor="programme">
                   Programme
                 </label>
                 <select
@@ -214,7 +194,7 @@ export function SubmissionForm({
                   value={programmeId}
                   onChange={(e) => setProgrammeId(e.target.value)}
                   disabled={!departmentId}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent disabled:opacity-40"
+                  className="field"
                 >
                   <option value="">Select programme</option>
                   {filteredProgrammes.map((p) => (
@@ -226,7 +206,7 @@ export function SubmissionForm({
               </div>
 
               <div>
-                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="year">
+                <label className="field-label" htmlFor="year">
                   Year of completion
                 </label>
                 <input
@@ -237,12 +217,12 @@ export function SubmissionForm({
                   max={new Date().getFullYear()}
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="field"
                 />
               </div>
 
               <div>
-                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="supervisor">
+                <label className="field-label" htmlFor="supervisor">
                   Supervisor
                 </label>
                 <input
@@ -250,12 +230,13 @@ export function SubmissionForm({
                   required
                   value={supervisorName}
                   onChange={(e) => setSupervisorName(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="field"
                   placeholder="e.g. Prof. A. B. Sample"
                 />
               </div>
-              <div>
-                <label className="block text-md text-tsu-text-secondary mb-1.5" htmlFor="matric">
+
+              <div className="sm:col-span-2">
+                <label className="field-label" htmlFor="matric">
                   Matric number
                 </label>
                 <input
@@ -263,7 +244,7 @@ export function SubmissionForm({
                   required
                   value={matricNumber}
                   onChange={(e) => setMatricNumber(e.target.value)}
-                  className="w-full bg-tsu-input-bg border border-tsu-input-border rounded-lg px-3.5 py-2.5 text-sm md:text-md text-tsu-text-primary focus:outline-none focus:ring-1 focus:ring-tsu-accent"
+                  className="field"
                   placeholder="e.g. TSU/PG/2023/0142"
                 />
               </div>
@@ -271,42 +252,36 @@ export function SubmissionForm({
           </div>
 
           {/* Manuscript upload */}
-          <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-6">
-            <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-4">
-              Manuscript
-            </p>
+          <div className="panel p-5 sm:p-7">
+            <p className="section-label mb-5">Manuscript</p>
             <label
               htmlFor="file"
-              className="flex items-center gap-3.5 border border-dashed border-tsu-input-border rounded-lg p-4 cursor-pointer hover:border-tsu-accent transition-colors"
+              className="flex cursor-pointer items-center gap-4 rounded-xl border-2 border-dashed border-tsu-input-border p-5 transition-colors hover:border-tsu-accent hover:bg-tsu-accent-tag-bg/30 sm:p-6"
             >
-              <div className="w-10 h-10 rounded-lg bg-tsu-accent-tag-bg flex items-center justify-center flex-shrink-0">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7ca8e0" strokeWidth="2">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-tsu-accent-tag-bg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8db6ec" strokeWidth="2">
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                   <path d="M14 2v6h6" />
                 </svg>
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 {file ? (
                   <>
-                    <p className="text-sm md:text-md text-tsu-text-primary truncate">{file.name}</p>
-                    <p className="text-md text-tsu-text-muted mt-0.5">
+                    <p className="truncate text-base font-semibold text-white sm:text-lg">{file.name}</p>
+                    <p className="mt-0.5 text-base text-tsu-text-muted">
                       {(file.size / (1024 * 1024)).toFixed(1)}MB · PDF
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-sm md:text-md text-tsu-text-secondary">Choose a PDF to upload</p>
-                    <p className="text-md text-tsu-text-muted mt-0.5">
-                      Up to 50MB. Large files should be compressed first — see the note below.
+                    <p className="text-base font-semibold text-white sm:text-lg">Choose a PDF to upload</p>
+                    <p className="mt-0.5 text-sm text-tsu-text-muted sm:text-base">
+                      Up to 50MB. Large files should be compressed first.
                     </p>
                   </>
                 )}
               </div>
-              {fileReady && (
-                <span className="bg-tsu-success-bg text-tsu-success-text text-md font-medium px-3 py-1.5 rounded-pill flex-shrink-0">
-                  Ready
-                </span>
-              )}
+              {fileReady && <span className="pill-green flex-shrink-0">Ready</span>}
             </label>
             <input
               id="file"
@@ -315,15 +290,15 @@ export function SubmissionForm({
               onChange={handleFileChange}
               className="hidden"
             />
-            {fileError && <p className="text-md text-red-400 mt-2">{fileError}</p>}
-            <p className="text-md text-tsu-text-muted mt-3 leading-relaxed">
+            {fileError && <p className="mt-3 text-base text-red-400">{fileError}</p>}
+            <p className="mt-4 text-base leading-relaxed text-tsu-text-muted">
               If your file is large (scanned pages or many images), compress it before uploading using
               a free tool such as{" "}
               <a
                 href="https://smallpdf.com/compress-pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-tsu-accent-tag-text hover:underline"
+                className="text-tsu-accent-tag-text underline-offset-4 hover:underline"
               >
                 smallpdf.com
               </a>{" "}
@@ -332,7 +307,7 @@ export function SubmissionForm({
                 href="https://www.ilovepdf.com/compress_pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-tsu-accent-tag-text hover:underline"
+                className="text-tsu-accent-tag-text underline-offset-4 hover:underline"
               >
                 ilovepdf.com
               </a>
@@ -341,32 +316,22 @@ export function SubmissionForm({
           </div>
 
           {result && (
-            <div
-              className={`rounded-lg p-4 text-sm md:text-md ${
-                result.success
-                  ? "bg-tsu-success-bg text-tsu-success-text"
-                  : "bg-red-950 text-red-400"
-              }`}
-            >
-              {result.message}
-            </div>
+            <div className={result.success ? "alert-success" : "alert-error"}>{result.message}</div>
           )}
 
           <button
             type="submit"
             disabled={isPending || !!fileError}
-            className="w-full bg-tsu-accent text-white text-sm md:text-md font-medium py-3.5 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="btn-primary w-full py-4 text-lg"
           >
             {isPending ? "Submitting…" : "Submit for review"}
           </button>
         </form>
 
         {/* What happens next — mirrors the Screening Portal's step tracker */}
-        <div className="border-t border-tsu-card-border mt-7 pt-6">
-          <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3.5">
-            What happens next
-          </p>
-          <div className="flex flex-col gap-3">
+        <div className="mt-10 border-t border-tsu-card-border pt-8">
+          <p className="section-label mb-5">What happens next</p>
+          <div className="flex flex-col gap-4">
             <StepRow label="Submitted" state={fileReady ? "done" : "pending"} number={1} />
             <StepRow label="Under admin review" state="pending" number={2} />
             <StepRow label="Published to the repository" state="upcoming" number={3} />
@@ -374,12 +339,10 @@ export function SubmissionForm({
         </div>
 
         {/* Live citation preview */}
-        <div className="border-t border-tsu-card-border mt-7 pt-6">
-          <p className="text-[11px] tracking-wider uppercase text-tsu-text-muted mb-3">
-            How this will be cited
-          </p>
-          <div className="bg-tsu-bg border border-tsu-card-border rounded-card p-5">
-            <p className="font-display text-sm md:text-md leading-relaxed text-tsu-text-primary">
+        <div className="mt-10 border-t border-tsu-card-border pt-8">
+          <p className="section-label mb-4">How this will be cited</p>
+          <div className="panel p-5 sm:p-7">
+            <p className="font-display text-lg leading-relaxed text-white sm:text-xl">
               {authorName || "Author name"}. ({year || "Year"}).{" "}
               <span className="italic">{title || "Thesis title"}</span>.{" "}
               {selectedProgramme ? DEGREE_LABELS[selectedProgramme.degree_type] : "Degree"} thesis,{" "}
@@ -409,20 +372,26 @@ function StepRow({
       : "bg-tsu-input-bg text-tsu-text-muted";
 
   const textClass =
-    state === "done" ? "text-tsu-text-primary" : state === "pending" ? "text-tsu-text-secondary" : "text-tsu-text-muted";
+    state === "done"
+      ? "text-tsu-text-primary"
+      : state === "pending"
+      ? "text-tsu-text-secondary"
+      : "text-tsu-text-muted";
 
   return (
-    <div className="flex items-center gap-3">
-      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-md ${circleClass}`}>
+    <div className="flex items-center gap-3.5">
+      <div
+        className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold ${circleClass}`}
+      >
         {state === "done" ? (
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <path d="M20 6L9 17l-5-5" />
           </svg>
         ) : (
           number
         )}
       </div>
-      <p className={`text-sm md:text-md ${textClass}`}>{label}</p>
+      <p className={`text-base sm:text-[17px] ${textClass}`}>{label}</p>
     </div>
   );
 }
