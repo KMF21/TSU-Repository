@@ -1,71 +1,83 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import logo from "../assets/tsu_logo1.png";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { user } = useUser();
+  const isAdmin = (user?.publicMetadata as { role?: string } | undefined)?.role === "admin";
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  const links = [
+    { href: "/browse", label: "Browse research", show: "always" as const },
+    { href: "/dashboard", label: "My submissions", show: "in" as const },
+    { href: "/submit", label: "Submit research", show: "in" as const },
+    ...(isAdmin ? [{ href: "/admin", label: "Admin", show: "in" as const }] : []),
+  ];
+
+  const linkClass = (href: string) =>
+    `text-base font-medium transition-colors ${
+      pathname === href || pathname.startsWith(href + "/")
+        ? "text-white"
+        : "text-tsu-text-secondary hover:text-white"
+    }`;
 
   return (
-    <header className="border-b border-tsu-card-border relative">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 min-w-0" onClick={() => setMenuOpen(false)}>
+    <header className="sticky top-0 z-50 border-b border-tsu-card-border bg-tsu-bg/85 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-8 sm:py-4">
+        <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="TSU Digital Research Repository home">
           <Image
             src={logo}
-            width={36}
-            height={36}
+            width={48}
+            height={48}
             alt="Taraba State University"
-            className="h-8 w-8 sm:h-9 sm:w-9 rounded-full object-cover flex-shrink-0"
+            className="h-10 w-10 flex-shrink-0 rounded-full object-cover ring-2 ring-white/10 sm:h-12 sm:w-12"
           />
           <div className="min-w-0">
-            <p className="text-md sm:text-sm md:text-lg font-medium text-tsu-text-heading leading-tight truncate">
+            <p className="truncate text-[15px] font-semibold leading-tight text-white sm:text-lg">
               TSU Digital Research Repository
             </p>
-            <p className="hidden sm:block text-[11px] text-tsu-text-muted leading-tight">
+            <p className="truncate text-xs leading-tight text-tsu-text-muted sm:text-[13px]">
               College of Postgraduate Studies
             </p>
           </div>
         </Link>
 
-        {/* Desktop nav — hidden below md */}
-        <nav className="hidden md:flex items-center gap-5 flex-shrink-0">
-          <Link
-            href="/browse"
-            className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
-          >
-            Browse research
-          </Link>
+        {/* Desktop nav */}
+        <nav className="hidden flex-shrink-0 items-center gap-7 lg:flex" aria-label="Main">
+          {links.map((l) => (
+            <SignedOutAware key={l.href} show={l.show}>
+              <Link href={l.href} className={linkClass(l.href)}>
+                {l.label}
+              </Link>
+            </SignedOutAware>
+          ))}
 
           <SignedIn>
-            <Link
-              href="/dashboard"
-              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
-            >
-              My submissions
-            </Link>
-            <Link
-              href="/submit"
-              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors"
-            >
-              Submit research
-            </Link>
             <UserButton />
           </SignedIn>
 
           <SignedOut>
             <SignInButton mode="modal">
-              <button className="bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm md:text-md font-medium px-4 py-2 rounded-pill hover:bg-tsu-accent hover:text-white transition-colors">
+              <button className="rounded-pill bg-tsu-accent px-5 py-2.5 text-[15px] font-semibold text-white shadow-glow transition-colors hover:bg-blue-500">
                 Sign in
               </button>
             </SignInButton>
           </SignedOut>
         </nav>
 
-        {/* Mobile controls — visible below md */}
-        <div className="flex md:hidden items-center gap-3 flex-shrink-0">
+        {/* Mobile / tablet controls */}
+        <div className="flex flex-shrink-0 items-center gap-3 lg:hidden">
           <SignedIn>
             <UserButton />
           </SignedIn>
@@ -73,14 +85,14 @@ export function Header() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
-            className="w-9 h-9 flex items-center justify-center rounded-lg bg-tsu-card border border-tsu-card-border text-tsu-text-secondary"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-tsu-card-border bg-tsu-card text-tsu-text-secondary transition-colors hover:text-white"
           >
             {menuOpen ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M18 6L6 18M6 6l12 12" />
               </svg>
             ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 6h18M3 12h18M3 18h18" />
               </svg>
             )}
@@ -90,44 +102,48 @@ export function Header() {
 
       {/* Mobile dropdown panel */}
       {menuOpen && (
-        <nav className="md:hidden border-t border-tsu-card-border bg-tsu-card px-4 sm:px-6 py-4 flex flex-col gap-1">
-          <Link
-            href="/browse"
-            onClick={() => setMenuOpen(false)}
-            className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
-          >
-            Browse research
-          </Link>
+        <nav
+          className="border-t border-tsu-card-border bg-tsu-card px-5 py-4 sm:px-8 lg:hidden"
+          aria-label="Mobile"
+        >
+          <div className="mx-auto flex max-w-6xl flex-col">
+            {links.map((l) => (
+              <SignedOutAware key={l.href} show={l.show}>
+                <Link
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`block border-b border-tsu-card-border/60 py-3.5 text-lg ${linkClass(l.href)}`}
+                >
+                  {l.label}
+                </Link>
+              </SignedOutAware>
+            ))}
 
-          <SignedIn>
-            <Link
-              href="/dashboard"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
-            >
-              My submissions
-            </Link>
-            <Link
-              href="/submit"
-              onClick={() => setMenuOpen(false)}
-              className="text-sm md:text-md text-tsu-text-secondary hover:text-tsu-text-primary transition-colors py-2.5"
-            >
-              Submit research
-            </Link>
-          </SignedIn>
-
-          <SignedOut>
-            <SignInButton mode="modal">
-              <button
-                onClick={() => setMenuOpen(false)}
-                className="mt-2 bg-tsu-accent-tag-bg text-tsu-accent-tag-text text-sm md:text-md font-medium px-4 py-2.5 rounded-lg hover:bg-tsu-accent hover:text-white transition-colors text-left"
-              >
-                Sign in
-              </button>
-            </SignInButton>
-          </SignedOut>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="mt-4 rounded-xl bg-tsu-accent px-5 py-3.5 text-lg font-semibold text-white"
+                >
+                  Sign in
+                </button>
+              </SignInButton>
+            </SignedOut>
+          </div>
         </nav>
       )}
     </header>
   );
+}
+
+/** Renders children for everyone ("always") or only for signed-in users ("in"). */
+function SignedOutAware({
+  show,
+  children,
+}: {
+  show: "always" | "in";
+  children: React.ReactNode;
+}) {
+  if (show === "always") return <>{children}</>;
+  return <SignedIn>{children}</SignedIn>;
 }

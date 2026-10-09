@@ -31,29 +31,31 @@ export function AccessLevelToggle({
   }
 
   return (
-    <div className="flex items-center justify-between bg-tsu-bg border border-tsu-card-border rounded-card p-5 mb-6">
-      <div>
-        <p className="text-sm md:text-md text-tsu-text-primary mb-0.5">
-          {level === "open" ? "Open access" : "Restricted"}
-        </p>
-        <p className="text-md text-tsu-text-muted">
-          {level === "open"
-            ? "Visible to anyone once published."
-            : "Only visible to signed-in TSU users once published."}
-        </p>
+    <div className="panel mb-6 p-5 sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-lg font-semibold text-white">
+            {level === "open" ? "Open access" : "Restricted"}
+          </p>
+          <p className="mt-1 text-base text-tsu-text-secondary">
+            {level === "open"
+              ? "Visible to anyone once published, and harvested by Google Scholar, BASE and CORE."
+              : "Only visible to signed-in TSU users once published. Never indexed externally."}
+          </p>
+        </div>
+        <button
+          onClick={toggle}
+          disabled={isPending}
+          className={`btn flex-shrink-0 ${
+            level === "open"
+              ? "bg-tsu-accent-tag-bg text-tsu-accent-tag-text hover:bg-tsu-accent hover:text-white"
+              : "bg-tsu-gold-bg text-tsu-gold-text hover:brightness-125"
+          }`}
+        >
+          {isPending ? "Updating…" : level === "open" ? "Make restricted" : "Make open"}
+        </button>
       </div>
-      <button
-        onClick={toggle}
-        disabled={isPending}
-        className={`text-md font-medium px-4 py-2 rounded-pill transition-colors disabled:opacity-50 ${
-          level === "open"
-            ? "bg-tsu-accent-tag-bg text-tsu-accent-tag-text hover:bg-tsu-accent hover:text-white"
-            : "bg-tsu-gold-bg text-tsu-gold-text hover:opacity-80"
-        }`}
-      >
-        {isPending ? "Updating…" : level === "open" ? "Make restricted" : "Make open"}
-      </button>
-      {error && <p className="text-md text-red-400 ml-3">{error}</p>}
+      {error && <p className="mt-3 text-base text-red-400">{error}</p>}
     </div>
   );
 }

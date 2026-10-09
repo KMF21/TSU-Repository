@@ -1,6 +1,12 @@
+import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { SubmissionForm } from "@/app/components/SubmissioForm";
+
+export const metadata: Metadata = {
+  title: "Submit research",
+  robots: { index: false, follow: false },
+};
 
 export default async function SubmitPage() {
   const user = await currentUser();
@@ -17,7 +23,7 @@ export default async function SubmitPage() {
     : "";
 
   return (
-    <main className="min-h-screen bg-tsu-cream">
+    <main className="min-h-screen bg-tsu-bg">
       <SubmissionForm
         departments={departments ?? []}
         programmes={programmes ?? []}
