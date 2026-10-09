@@ -18,6 +18,8 @@ export function ThesisEditForm({
   departments: Department[];
   programmes: Programme[];
   initial: {
+    author_name: string;
+    matric_number: string;
     title: string;
     abstract: string;
     keywords: string[];
@@ -28,6 +30,8 @@ export function ThesisEditForm({
   };
 }) {
   const router = useRouter();
+  const [authorName, setAuthorName] = useState(initial.author_name);
+  const [matric, setMatric] = useState(initial.matric_number);
   const [title, setTitle] = useState(initial.title);
   const [abstract, setAbstract] = useState(initial.abstract);
   const [keywords, setKeywords] = useState(initial.keywords.join(", "));
@@ -54,6 +58,8 @@ export function ThesisEditForm({
 
     startTransition(async () => {
       const res = await updateThesisMetadata(thesisId, {
+        author_name: authorName,
+        matric_number: matric,
         title,
         abstract,
         keywords,
@@ -74,6 +80,35 @@ export function ThesisEditForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="panel p-5 sm:p-7">
+        <p className="section-label mb-5">Author</p>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className="field-label" htmlFor="author">
+              Author name (published)
+            </label>
+            <input
+              id="author"
+              required
+              value={authorName}
+              onChange={(e) => setAuthorName(e.target.value)}
+              className="field"
+            />
+          </div>
+          <div>
+            <label className="field-label" htmlFor="matric">
+              Matric number (private)
+            </label>
+            <input
+              id="matric"
+              value={matric}
+              onChange={(e) => setMatric(e.target.value)}
+              className="field"
+            />
+          </div>
+        </div>
+      </div>
+
       <div className="panel p-5 sm:p-7">
         <p className="section-label mb-5">Thesis details</p>
 

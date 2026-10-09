@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import { getAuthorNames } from "@/lib/publicAuthors";
 import { DEGREE_LABELS, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -27,7 +26,7 @@ export default async function BrowsePage({
   let query = supabase
     .from("theses")
     .select(
-      `id, title, abstract, keywords, year, degree_type, author_id,
+      `id, title, abstract, keywords, year, degree_type, author_name,
        department:departments ( name )`
     )
     .eq("status", "published")
@@ -43,7 +42,6 @@ export default async function BrowsePage({
   }
 
   const { data: theses, error } = await query;
-  const authorNames = await getAuthorNames((theses ?? []).map((t: any) => t.author_id));
   const hasFilters = !!(q || department || degree);
 
   return (
@@ -138,7 +136,7 @@ export default async function BrowsePage({
                   </div>
 
                   <p className="mt-2 text-base text-tsu-text-secondary sm:text-[17px]">
-                    {authorNames[t.author_id] ?? "Unknown author"} &middot; {t.department?.name}{" "}
+                    {t.author_name} &middot; {t.department?.name}{" "}
                     &middot; {DEGREE_LABELS[t.degree_type]} &middot; {t.year}
                   </p>
 

@@ -20,8 +20,9 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
     .from("theses")
     .select(
       `id, title, abstract, keywords, year, degree_type, supervisor_name, status, access_level,
-       original_filename, file_size_bytes,
-       author:users!theses_author_id_fkey ( full_name, email, matric_number ),
+       original_filename, file_size_bytes, author_name, author_id, submitted_on_behalf,
+       uploader:users!theses_author_id_fkey ( full_name, email ),
+       private:thesis_author_private ( matric_number ),
        department:departments ( name, faculty ),
        programme:programmes ( name )`
     )
@@ -31,7 +32,8 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
   if (!thesis) return notFound();
 
   const previewUrl = await getThesisPreviewUrl(params.id);
-  const author = thesis.author as any;
+  const uploader = thesis.uploader as any;
+  const priv = one(thesis.private as any);
   const department = thesis.department as any;
   const programme = thesis.programme as any;
 
@@ -63,9 +65,27 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             {thesis.title}
           </h1>
           <p className="mt-4 text-base text-tsu-text-secondary sm:text-lg">
-            {author?.full_name} &middot; {author?.matric_number || "No matric number on file"}
-            {author?.email ? <> &middot; {author.email}</> : null}
+            {thesis.author_name} &middot; {priv?.matric_number || "No matric number on file"}
           </p>
+
+          <div
+            className={`mt-4 rounded-xl border p-4 text-base ${
+              thesis.submitted_on_behalf
+                ? "border-tsu-gold-text/30 bg-tsu-gold-bg text-tsu-gold-text"
+                : "border-tsu-card-border bg-tsu-bg/60 text-tsu-text-secondary"
+            }`}
+          >
+            {thesis.submitted_on_behalf ? (
+              <>
+                <span className="font-semibold">Uploaded on behalf of the author</span> by{" "}
+                {uploader?.full_name} ({uploader?.email}). A different administrator must approve it.
+              </>
+            ) : (
+              <>
+                Submitted by the author&apos;s own account: {uploader?.full_name} ({uploader?.email}).
+              </>
+            )}
+          </div>
 
           <div className="panel mt-8 p-5 sm:p-7">
             <p className="section-label mb-5">Academic record</p>
@@ -132,6 +152,10 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
       </div>
     </main>
   );
+}
+
+function one<T>(v: T | T[] | null | undefined): T | null {
+  return Array.isArray(v) ? v[0] ?? null : v ?? null;
 }
 
 function Field({ label, value }: { label: string; value?: string | null }) {

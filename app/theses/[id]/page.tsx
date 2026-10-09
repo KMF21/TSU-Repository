@@ -6,7 +6,6 @@ import {
   createServerSupabaseClient,
   createServiceRoleSupabaseClient,
 } from "@/lib/supabase/server";
-import { getAuthorNames } from "@/lib/publicAuthors";
 import { ExpandableText } from "@/app/components/ExpandableText";
 import { DEGREE_LABELS, INSTITUTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -22,7 +21,7 @@ const getThesis = cache(async (id: string) => {
     .from("theses")
     .select(
       `id, title, abstract, keywords, year, degree_type, supervisor_name, access_level,
-       author_id, view_count, download_count, published_at, updated_at,
+       author_name, view_count, download_count,
        department:departments ( name, faculty ),
        programme:programmes ( name )`
     )
@@ -40,8 +39,7 @@ export async function generateMetadata({
   const thesis = await getThesis(params.id);
   if (!thesis) return { title: "Thesis not found", robots: { index: false } };
 
-  const names = await getAuthorNames([thesis.author_id]);
-  const author = names[thesis.author_id];
+  const author = thesis.author_name;
   const department = thesis.department as any;
   const isOpen = thesis.access_level === "open";
   const pageUrl = `${SITE_URL}/theses/${thesis.id}`;
@@ -99,8 +97,7 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
     p_thesis_id: params.id,
   });
 
-  const names = await getAuthorNames([thesis.author_id]);
-  const authorName = names[thesis.author_id] ?? "Unknown author";
+  const authorName = thesis.author_name;
   const department = thesis.department as any;
   const programme = thesis.programme as any;
   const degree = DEGREE_LABELS[thesis.degree_type] ?? thesis.degree_type;

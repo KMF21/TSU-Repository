@@ -11,7 +11,9 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user } = useUser();
-  const isAdmin = (user?.publicMetadata as { role?: string } | undefined)?.role === "admin";
+  const role = (user?.publicMetadata as { role?: string } | undefined)?.role;
+  const isAdmin = role === "admin";
+  const canUploadForOthers = role === "admin" || role === "depositor";
 
   // Close the mobile menu whenever the route changes.
   useEffect(() => {
@@ -22,12 +24,15 @@ export function Header() {
     { href: "/browse", label: "Browse research", show: "always" as const },
     { href: "/dashboard", label: "My submissions", show: "in" as const },
     { href: "/submit", label: "Submit research", show: "in" as const },
+    ...(canUploadForOthers
+      ? [{ href: "/submit/on-behalf", label: "Upload for others", show: "in" as const }]
+      : []),
     ...(isAdmin ? [{ href: "/admin", label: "Admin", show: "in" as const }] : []),
   ];
 
   const linkClass = (href: string) =>
     `text-base font-medium transition-colors ${
-      pathname === href || pathname.startsWith(href + "/")
+      pathname === href || (href !== "/submit" && pathname.startsWith(href + "/"))
         ? "text-white"
         : "text-tsu-text-secondary hover:text-white"
     }`;

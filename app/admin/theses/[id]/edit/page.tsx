@@ -16,7 +16,8 @@ export default async function EditThesisPage({ params }: { params: { id: string 
     supabase
       .from("theses")
       .select(
-        "id, title, abstract, keywords, year, supervisor_name, department_id, programme_id, status"
+        `id, title, abstract, keywords, year, supervisor_name, department_id, programme_id, status,
+         author_name, private:thesis_author_private ( matric_number )`
       )
       .eq("id", params.id)
       .maybeSingle(),
@@ -51,6 +52,10 @@ export default async function EditThesisPage({ params }: { params: { id: string 
             departments={departments ?? []}
             programmes={programmes ?? []}
             initial={{
+              author_name: thesis.author_name,
+              matric_number:
+                ((Array.isArray(thesis.private) ? thesis.private[0] : thesis.private) as any)
+                  ?.matric_number ?? "",
               title: thesis.title,
               abstract: thesis.abstract,
               keywords: thesis.keywords ?? [],
