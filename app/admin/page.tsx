@@ -26,7 +26,7 @@ export default async function AdminQueuePage({
     .from("theses")
     .select(
       `id, title, abstract, year, submitted_at, reviewed_at, degree_type, status, access_level, rejection_reason,
-       author:users!theses_author_id_fkey ( full_name ),
+       author_name, submitted_on_behalf,
        department:departments ( name ),
        programme:programmes ( name )`
     )
@@ -93,9 +93,12 @@ export default async function AdminQueuePage({
                     {t.title}
                   </p>
                   <p className="mt-2 text-base text-tsu-text-secondary">
-                    {t.author?.full_name} &middot; {t.department?.name} &middot; {t.programme?.name}{" "}
+                    {t.author_name} &middot; {t.department?.name} &middot; {t.programme?.name}{" "}
                     &middot; {t.year}
                   </p>
+                  {t.submitted_on_behalf && (
+                    <p className="mt-2 text-sm font-semibold text-tsu-gold-text">Uploaded on behalf of author</p>
+                  )}
                   <p className="mt-2.5 line-clamp-2 text-base leading-relaxed text-tsu-text-muted">
                     {t.abstract}
                   </p>

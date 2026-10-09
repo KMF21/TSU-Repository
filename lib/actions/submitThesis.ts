@@ -5,17 +5,32 @@ import { createServerSupabaseClient, createServiceRoleSupabaseClient } from "@/l
 import { randomUUID } from "crypto";
 
 const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024; // 50MB hard cap — the real safeguard
-const RECOMMENDED_SIZE_BYTES = 15 * 1024 * 1024; // soft, advisory threshold only
 
 export type SubmitThesisResult =
   | { success: true; thesisId: string }
   | { success: false; error: string };
 
+/**
+ * Two ways in:
+ *
+ *  - "self"      A student submits their own work. The author name defaults to
+ *                their account name but can be corrected to match the title
+ *                page. Their matric number is saved to their profile so the
+ *                form is pre-filled next time.
+ *
+ *  - "on_behalf" An admin or depositor uploads someone else's work. The author
+ *                name and matric number are typed in and belong to the AUTHOR.
+ *                Nothing is written to the uploader's own profile. Whether the
+ *                caller may do this is decided here, from the database, never
+ *                from anything the browser sends.
+ */
 export async function submitThesis(formData: FormData): Promise<SubmitThesisResult> {
   const { userId } = await auth();
   if (!userId) {
     return { success: false, error: "You must be signed in to submit." };
   }
+
+  const onBehalf = String(formData.get("on_behalf") ?? "") === "1";
 
   const title = String(formData.get("title") ?? "").trim();
   const abstract = String(formData.get("abstract") ?? "").trim();
@@ -25,12 +40,16 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
   const degreeType = String(formData.get("degree_type") ?? "");
   const year = Number(formData.get("year"));
   const supervisorName = String(formData.get("supervisor_name") ?? "").trim();
+  const authorNameInput = String(formData.get("author_name") ?? "").trim();
   const matricNumber = String(formData.get("matric_number") ?? "").trim();
   const file = formData.get("file") as File | null;
 
   // --- Validation ---
   if (!title || !abstract || !departmentId || !programmeId || !degreeType || !year || !supervisorName || !matricNumber) {
     return { success: false, error: "Please complete every required field before submitting." };
+  }
+  if (onBehalf && !authorNameInput) {
+    return { success: false, error: "Please enter the author's full name." };
   }
   if (!file || file.size === 0) {
     return { success: false, error: "Please attach your thesis as a PDF." };
@@ -54,7 +73,7 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
 
   const { data: profile, error: profileError } = await supabase
     .from("users")
-    .select("id, tenant_id")
+    .select("id, tenant_id, role, full_name")
     .eq("clerk_id", userId)
     .single();
 
@@ -62,15 +81,20 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
     return { success: false, error: "We couldn't verify your profile. Please try signing out and back in." };
   }
 
-  // Capture matric number on the student's profile — it's identity data
-  // tied to the person, not the individual submission, so it's saved
-  // once here rather than duplicated on every thesis record.
-  await supabase
-    .from("users")
-    .update({ matric_number: matricNumber })
-    .eq("id", profile.id);
+  if (onBehalf && profile.role !== "admin" && profile.role !== "depositor") {
+    return { success: false, error: "You are not authorized to upload on behalf of others." };
+  }
 
-  // --- Upload directly to the permanent path — no staging/compression handoff ---
+  const authorName = onBehalf ? authorNameInput : authorNameInput || profile.full_name;
+
+  // A student's own matric number is identity data tied to the person, so it
+  // is remembered on their profile. For uploads on behalf it belongs to
+  // someone else and must never touch the uploader's profile.
+  if (!onBehalf) {
+    await supabase.from("users").update({ matric_number: matricNumber }).eq("id", profile.id);
+  }
+
+  // --- Upload directly to the permanent path ---
   const serviceClient = createServiceRoleSupabaseClient();
   const filePath = `theses/${profile.tenant_id}/${randomUUID()}.pdf`;
 
@@ -90,7 +114,9 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
       title,
       abstract,
       keywords,
-      author_id: profile.id,
+      author_id: profile.id, // the uploading account (owner)
+      author_name: authorName, // the real author, as published
+      submitted_on_behalf: onBehalf,
       department_id: departmentId,
       programme_id: programmeId,
       degree_type: degreeType,
@@ -99,14 +125,37 @@ export async function submitThesis(formData: FormData): Promise<SubmitThesisResu
       original_filename: file.name,
       file_size_bytes: file.size,
       file_url: filePath,
-     status: "pending",
+      status: "pending",
       access_level: "open",
     })
     .select("id")
     .single();
 
   if (insertError || !thesis) {
+    // Don't leave an orphaned PDF behind if the record could not be saved.
+    await serviceClient.storage.from("theses").remove([filePath]);
     return { success: false, error: "Could not save your submission. Please try again." };
+  }
+
+  // The author's matric number lives in a private, RLS-protected table.
+  const { error: privateError } = await supabase
+    .from("thesis_author_private")
+    .insert({ thesis_id: thesis.id, matric_number: matricNumber });
+
+  if (privateError) {
+    // The thesis is saved and can be reviewed; admins can add the matric
+    // number when editing. Surface it in logs rather than failing the upload.
+    console.error("thesis_author_private insert failed:", privateError.message);
+  }
+
+  if (onBehalf) {
+    await serviceClient.from("audit_log").insert({
+      actor_id: profile.id,
+      action: "uploaded_on_behalf",
+      target_table: "theses",
+      target_id: thesis.id,
+      metadata: { author_name: authorName },
+    });
   }
 
   return { success: true, thesisId: thesis.id };

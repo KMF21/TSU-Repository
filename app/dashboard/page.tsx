@@ -17,6 +17,7 @@ export default async function DashboardPage() {
     .from("theses")
     .select(
       `id, title, year, degree_type, status, rejection_reason, submitted_at, published_at,
+       author_name, submitted_on_behalf,
        department:departments ( name ),
        programme:programmes ( name )`
     )
@@ -76,6 +77,11 @@ function SubmissionCard({ thesis }: { thesis: any }) {
           <h2 className="font-display text-xl font-semibold leading-snug text-white sm:text-2xl">
             {thesis.title}
           </h2>
+          {thesis.submitted_on_behalf && (
+            <p className="mt-2 text-base font-semibold text-tsu-gold-text">
+              Uploaded for: {thesis.author_name}
+            </p>
+          )}
           <p className="mt-2 text-base text-tsu-text-secondary">
             {thesis.department?.name} &middot; {DEGREE_LABELS[thesis.degree_type]} &middot;{" "}
             {thesis.year}

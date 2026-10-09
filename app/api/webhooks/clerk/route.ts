@@ -87,19 +87,26 @@ export async function POST(req: Request) {
   // Role is never trusted from the client — it's only ever set here from
   // Clerk's public_metadata, which only an admin can edit via the Clerk
   // dashboard or a protected server action. Defaults to "student".
-  const role = public_metadata?.role === "admin" ? "admin" : "student";
+  //   admin     - reviews, approves, edits
+  //   depositor - may upload on behalf of others, can NOT approve
+  const metaRole = public_metadata?.role;
+  const role = metaRole === "admin" || metaRole === "depositor" ? metaRole : "student";
 
-  const { error: upsertError } = await supabase.from("users").upsert(
-    {
-      clerk_id: id,
-      tenant_id: tenant.id,
-      full_name: fullName,
-      email: primaryEmail,
-      role,
-      matric_number: public_metadata?.matric_number ?? null,
-    },
-    { onConflict: "clerk_id" }
-  );
+  // Only touch matric_number when Clerk actually supplies one. Writing null
+  // here would wipe a matric number the student saved at submission time
+  // every time their Clerk profile is updated.
+  const row: Record<string, unknown> = {
+    clerk_id: id,
+    tenant_id: tenant.id,
+    full_name: fullName,
+    email: primaryEmail,
+    role,
+  };
+  if (public_metadata?.matric_number) row.matric_number = public_metadata.matric_number;
+
+  const { error: upsertError } = await supabase
+    .from("users")
+    .upsert(row, { onConflict: "clerk_id" });
 
   if (upsertError) {
     return NextResponse.json({ error: upsertError.message }, { status: 500 });

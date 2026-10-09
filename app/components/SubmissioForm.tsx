@@ -10,14 +10,19 @@ type Programme = { id: string; name: string; degree_type: string; department_id:
 export function SubmissionForm({
   departments,
   programmes,
-  authorName,
+  authorName: accountName,
   initialMatricNumber,
+  mode = "self",
 }: {
   departments: Department[];
   programmes: Programme[];
+  /** Name on the signed-in account; used to pre-fill the author field in "self" mode. */
   authorName: string;
   initialMatricNumber?: string;
+  /** "onBehalf": an admin/depositor uploading someone else's work. */
+  mode?: "self" | "onBehalf";
 }) {
+  const onBehalf = mode === "onBehalf";
   const [title, setTitle] = useState("");
   const [abstract, setAbstract] = useState("");
   const [keywords, setKeywords] = useState("");
@@ -25,7 +30,8 @@ export function SubmissionForm({
   const [programmeId, setProgrammeId] = useState("");
   const [year, setYear] = useState(new Date().getFullYear().toString());
   const [supervisorName, setSupervisorName] = useState("");
-  const [matricNumber, setMatricNumber] = useState(initialMatricNumber ?? "");
+  const [authorName, setAuthorName] = useState(onBehalf ? "" : accountName);
+  const [matricNumber, setMatricNumber] = useState(onBehalf ? "" : initialMatricNumber ?? "");
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
@@ -75,13 +81,24 @@ export function SubmissionForm({
     formData.set("degree_type", selectedProgramme?.degree_type ?? "");
     formData.set("year", year);
     formData.set("supervisor_name", supervisorName);
+    formData.set("author_name", authorName);
     formData.set("matric_number", matricNumber);
+    if (onBehalf) formData.set("on_behalf", "1");
     if (file) formData.set("file", file);
 
     startTransition(async () => {
       const res = await submitThesis(formData);
       if (res.success) {
-        setResult({ success: true, message: "Submitted. Your work is now pending review." });
+        setResult({
+          success: true,
+          message: onBehalf
+            ? "Uploaded. It is now pending review by another administrator."
+            : "Submitted. Your work is now pending review.",
+        });
+        if (onBehalf) {
+          setAuthorName("");
+          setMatricNumber("");
+        }
         setTitle("");
         setAbstract("");
         setKeywords("");
@@ -99,11 +116,19 @@ export function SubmissionForm({
     <div className="mx-auto max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
       <div className="mb-8 flex items-end justify-between gap-4">
         <div>
-          <p className="eyebrow mb-3">Deposit</p>
-          <h1 className="page-title">Submit your research</h1>
+          <p className="eyebrow mb-3">{onBehalf ? "Deposit on behalf of an author" : "Deposit"}</p>
+          <h1 className="page-title">{onBehalf ? "Upload for an author" : "Submit your research"}</h1>
         </div>
         <span className="pill-blue hidden border border-tsu-input-border sm:inline-flex">Draft</span>
       </div>
+
+      {onBehalf && (
+        <div className="mb-6 rounded-card border border-tsu-gold-text/30 bg-tsu-gold-bg p-5 text-base leading-relaxed text-tsu-gold-text sm:p-6">
+          You are uploading on behalf of another person. Enter the <strong>author&apos;s</strong> name
+          and matric number below, not your own. Uploads made this way must be approved by a
+          different administrator before they are published.
+        </div>
+      )}
 
       <div className="card p-5 sm:p-10">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -161,6 +186,26 @@ export function SubmissionForm({
           <div className="panel p-5 sm:p-7">
             <p className="section-label mb-5">Academic record</p>
             <div className="grid gap-5 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="field-label" htmlFor="author">
+                  {onBehalf ? "Author's full name" : "Author name"}
+                </label>
+                <input
+                  id="author"
+                  required
+                  value={authorName}
+                  onChange={(e) => setAuthorName(e.target.value)}
+                  className="field"
+                  placeholder="Exactly as it appears on the thesis title page"
+                />
+                {!onBehalf && (
+                  <p className="mt-2 text-sm text-tsu-text-muted">
+                    This name is published and used in your citation. Correct it here if it differs
+                    from your account name.
+                  </p>
+                )}
+              </div>
+
               <div>
                 <label className="field-label" htmlFor="department">
                   Department
@@ -237,7 +282,7 @@ export function SubmissionForm({
 
               <div className="sm:col-span-2">
                 <label className="field-label" htmlFor="matric">
-                  Matric number
+                  {onBehalf ? "Author's matric number" : "Matric number"}
                 </label>
                 <input
                   id="matric"
@@ -343,7 +388,7 @@ export function SubmissionForm({
           <p className="section-label mb-4">How this will be cited</p>
           <div className="panel p-5 sm:p-7">
             <p className="font-display text-lg leading-relaxed text-white sm:text-xl">
-              {authorName || "Author name"}. ({year || "Year"}).{" "}
+              {authorName.trim() || "Author name"}. ({year || "Year"}).{" "}
               <span className="italic">{title || "Thesis title"}</span>.{" "}
               {selectedProgramme ? DEGREE_LABELS[selectedProgramme.degree_type] : "Degree"} thesis,{" "}
               {selectedDepartment?.name || "Department"}, Taraba State University.

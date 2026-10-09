@@ -58,6 +58,21 @@ There is no self-service admin signup. To make someone an admin:
    - Their session token's `metadata.role` claim updates → middleware
      now lets them into `/admin`.
 
+### Depositors (upload for others, cannot approve)
+
+For College staff who upload theses on behalf of authors, use the
+`depositor` role instead of `admin`:
+
+```json
+{ "role": "depositor" }
+```
+
+A depositor gets an **Upload for others** link and the on-behalf form, sees
+their own uploads (and any rejection reason) in **My submissions**, and
+cannot open `/admin`, approve, reject or edit anything. Anything an admin
+uploads on behalf of someone must be approved by a *different* admin.
+Requires migration `007_author_fields_depositor.sql`.
+
 ## Step 5 — Verify the whole chain
 
 1. Run the app locally (`npm run dev`), sign up as a test user.

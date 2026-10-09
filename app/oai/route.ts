@@ -182,7 +182,7 @@ const SETS = Object.entries(DEGREE_LABELS)
 
 const RECORD_SELECT = `
   id, title, abstract, keywords, year, degree_type, supervisor_name, published_at, updated_at,
-  author:users!theses_author_id_fkey ( full_name ),
+  author_name,
   department:departments ( name )
 `;
 
@@ -206,7 +206,7 @@ type ThesisRow = {
   supervisor_name: string;
   published_at: string | null;
   updated_at: string;
-  author: { full_name: string } | { full_name: string }[] | null;
+  author_name: string;
   department: { name: string } | { name: string }[] | null;
 };
 
@@ -237,7 +237,7 @@ function header(t: ThesisRow): string {
 }
 
 function dcMetadata(t: ThesisRow): string {
-  const author = one(t.author)?.full_name;
+  const author = t.author_name;
   const dept = one(t.department)?.name;
   const pageUrl = `${SITE_URL}/theses/${t.id}`;
   const pdfUrl = `${pageUrl}/pdf`;

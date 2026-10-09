@@ -33,6 +33,22 @@ export async function approveThesis(thesisId: string): Promise<ActionResult> {
   const supabase = await createServerSupabaseClient();
   const serviceClient = createServiceRoleSupabaseClient();
 
+  // Two-person rule: whoever uploaded a thesis on behalf of someone else may
+  // not also approve it. A different administrator has to check and publish.
+  const { data: existing } = await supabase
+    .from("theses")
+    .select("author_id, submitted_on_behalf")
+    .eq("id", thesisId)
+    .single();
+
+  if (existing?.submitted_on_behalf && existing.author_id === check.profile.id) {
+    return {
+      success: false,
+      error:
+        "You uploaded this on behalf of the author, so a different administrator must approve it.",
+    };
+  }
+
   const { error } = await supabase
     .from("theses")
     .update({
