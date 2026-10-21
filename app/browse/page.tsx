@@ -13,15 +13,20 @@ export const metadata: Metadata = {
 export default async function BrowsePage({
   searchParams,
 }: {
-  searchParams: { q?: string; department?: string; degree?: string };
+  searchParams: { q?: string; department?: string; degree?: string; faculty?: string };
 }) {
   const supabase = await createServerSupabaseClient();
-  const { q, department, degree } = searchParams;
+  const { q, department, degree, faculty } = searchParams;
 
   const { data: departments } = await supabase
     .from("departments")
-    .select("id, name")
+    .select("id, name, faculty")
     .order("name");
+
+  // Faculty filter: resolve to the department ids inside that faculty.
+  const facultyDeptIds = faculty
+    ? (departments ?? []).filter((d: any) => d.faculty === faculty).map((d: any) => d.id)
+    : null;
 
   let query = supabase
     .from("theses")
@@ -32,6 +37,7 @@ export default async function BrowsePage({
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
+  if (facultyDeptIds) query = query.in("department_id", facultyDeptIds.length ? facultyDeptIds : ["00000000-0000-0000-0000-000000000000"]);
   if (department) query = query.eq("department_id", department);
   if (degree) query = query.eq("degree_type", degree);
   if (q && q.trim()) {
@@ -42,13 +48,22 @@ export default async function BrowsePage({
   }
 
   const { data: theses, error } = await query;
-  const hasFilters = !!(q || department || degree);
+  const hasFilters = !!(q || department || degree || faculty);
 
   return (
     <main className="min-h-screen bg-tsu-bg">
-      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-        <p className="eyebrow mb-3">Search the archive</p>
-        <h1 className="page-title mb-8 sm:mb-10">Browse research</h1>
+      <div className="relative overflow-hidden border-b border-tsu-card-border bg-gradient-to-b from-tsu-card/60 to-tsu-bg">
+        <div className="pointer-events-none absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-tsu-accent/15 blur-[120px]" />
+        <div className="relative mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+          <p className="eyebrow mb-3">Search the archive</p>
+          <h1 className="page-title">Browse research</h1>
+          <p className="mt-4 max-w-2xl text-base text-tsu-text-secondary sm:text-lg">
+            Theses and dissertations from every faculty of Taraba State University.
+          </p>
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
 
         {/* Search + filters */}
         <form method="GET" className="card mb-8 p-5 sm:p-7">
@@ -74,6 +89,7 @@ export default async function BrowsePage({
             />
           </div>
 
+          {faculty && <input type="hidden" name="faculty" value={faculty} />}
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_auto] lg:items-center">
             <select name="department" defaultValue={department ?? ""} className="field">
               <option value="">All departments</option>
@@ -116,16 +132,27 @@ export default async function BrowsePage({
 
         {theses && theses.length > 0 && (
           <>
-            <p className="mb-4 text-base text-tsu-text-muted">
-              {theses.length} {theses.length === 1 ? "result" : "results"}
-            </p>
+            <div className="mb-5 flex flex-wrap items-center gap-3">
+              <p className="text-base text-tsu-text-muted">
+                {theses.length} {theses.length === 1 ? "result" : "results"}
+              </p>
+              {faculty && (
+                <Link
+                  href={`/browse${q ? `?q=${encodeURIComponent(q)}` : ""}`}
+                  className="chip gap-2 hover:bg-tsu-accent hover:text-white"
+                >
+                  {faculty} <span aria-hidden>&times;</span>
+                </Link>
+              )}
+            </div>
             <div className="flex flex-col gap-4">
               {theses.map((t: any) => (
                 <Link
                   key={t.id}
                   href={`/theses/${t.id}`}
-                  className="card group block p-6 transition-colors hover:border-tsu-accent hover:bg-tsu-card-hover sm:p-8"
+                  className="card group relative block overflow-hidden p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-tsu-accent hover:bg-tsu-card-hover sm:p-8"
                 >
+                  <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-tsu-accent to-sky-400 opacity-0 transition-opacity group-hover:opacity-100" />
                   <div className="flex items-start justify-between gap-4">
                     <h2 className="font-display text-xl font-semibold leading-snug text-white sm:text-2xl">
                       {t.title}

@@ -55,20 +55,11 @@ export const metadata: Metadata = {
     siteName,
     title: `${siteName} | Taraba State University`,
     description: siteDescription,
-    images: [
-      {
-        url: "/assets/tsu_logo1.png",
-        width: 512,
-        height: 512,
-        alt: "Taraba State University",
-      },
-    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${siteName} | Taraba State University`,
     description: siteDescription,
-    images: ["/assets/tsu_logo1.png"],
   },
   other: {
     "theme-color": "#185fa5",
