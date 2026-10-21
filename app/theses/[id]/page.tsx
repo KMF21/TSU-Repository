@@ -132,7 +132,7 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
         <Link
           href="/browse"
-          className="mb-8 inline-flex items-center gap-2 text-base font-medium text-tsu-text-secondary transition-colors hover:text-white"
+          className="mb-8 inline-flex items-center gap-2 text-base font-medium text-tsu-text-secondary transition-colors hover:text-tsu-navy"
         >
           &larr; Back to browse
         </Link>
@@ -140,22 +140,22 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
           {/* ---------- Main column ---------- */}
           <div className="min-w-0 space-y-6">
-            <div className="card relative overflow-hidden p-6 sm:p-10">
-              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-tsu-accent via-sky-400 to-transparent" />
+            <div className="relative overflow-hidden rounded-card bg-tsu-navy p-6 shadow-lift sm:p-10">
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-tsu-accent via-tsu-gold to-transparent" />
               <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-tsu-accent/10 blur-[90px]" />
               <div className="relative mb-5 flex flex-wrap items-center gap-3">
-                <p className="eyebrow">{department?.faculty}</p>
+                <p className="eyebrow !text-tsu-gold">{department?.faculty}</p>
                 {thesis.access_level === "restricted" && (
                   <span className="pill-gold">TSU access only</span>
                 )}
               </div>
 
-              <h1 className="relative font-display text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[44px]">
+              <h1 className="relative font-display text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
                 {thesis.title}
               </h1>
 
-              <p className="mt-6 text-xl font-medium text-white">{authorName}</p>
-              <p className="mt-1.5 text-base text-tsu-text-secondary sm:text-lg">
+              <p className="mt-6 text-xl font-semibold text-tsu-gold">{authorName}</p>
+              <p className="mt-1.5 text-base text-slate-300 sm:text-lg">
                 {degree} &middot; {department?.name} &middot; {thesis.year}
               </p>
             </div>
@@ -211,13 +211,13 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
 
               <div className="mt-6 grid grid-cols-2 gap-4 border-t border-tsu-card-border pt-6 text-center">
                 <div>
-                  <p className="font-display text-3xl font-semibold text-white">
+                  <p className="font-display text-3xl font-bold text-tsu-navy">
                     {(newViewCount ?? thesis.view_count ?? 0).toLocaleString()}
                   </p>
                   <p className="mt-1 text-sm text-tsu-text-muted">Views</p>
                 </div>
                 <div>
-                  <p className="font-display text-3xl font-semibold text-white">
+                  <p className="font-display text-3xl font-bold text-tsu-navy">
                     {(thesis.download_count ?? 0).toLocaleString()}
                   </p>
                   <p className="mt-1 text-sm text-tsu-text-muted">Downloads</p>

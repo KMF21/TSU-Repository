@@ -1,17 +1,15 @@
+@import '@fontsource-variable/sora';
+@import '@fontsource-variable/inter';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* Sora (headings) and Inter (body) are bundled via fontsource, so they load
+   fast and still work if Google Fonts is blocked. */
 
-/* Fonts (Inter, Source Serif 4, IBM Plex Mono) are loaded with <link> tags
-   in app/layout.tsx so they never block the build and CSS @import ordering
-   rules cannot silently drop them. */
 
 :root {
-  /* Dark navy dashboard language, shared with the Screening Portal. */
-  --tsu-bg: #0b1220;
-  --tsu-card: #111a2e;
-  --tsu-card-border: #1e2a42;
-  --tsu-text-primary: #e8eaed;
+  --tsu-bg: #f5f7fb;
+  --tsu-ink: #1f2b40;
 }
 
 html {
@@ -21,8 +19,8 @@ html {
 
 body {
   background-color: var(--tsu-bg);
-  color: var(--tsu-text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--tsu-ink);
+  font-family: 'Inter Variable', Inter, system-ui, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -31,16 +29,16 @@ body {
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.45);
-  color: #fff;
+  background: rgba(201, 151, 28, 0.3);
+  color: #0f1f3d;
 }
 
 .font-display {
-  font-family: 'Source Serif 4', Georgia, serif;
+  font-family: 'Sora Variable', Sora, system-ui, sans-serif;
 }
 
 .font-mono {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -59,7 +57,7 @@ body {
 ------------------------------------------------------------------- */
 @layer components {
   .eyebrow {
-    @apply text-xs sm:text-[13px] font-semibold uppercase tracking-[0.2em] text-tsu-accent-tag-text;
+    @apply text-xs sm:text-[13px] font-semibold uppercase tracking-[0.2em] text-tsu-gold-text;
   }
 
   .section-label {
@@ -67,7 +65,7 @@ body {
   }
 
   .page-title {
-    @apply font-display text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-white leading-[1.15];
+    @apply font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-tsu-navy leading-[1.12];
   }
 
   .card {
@@ -75,35 +73,45 @@ body {
   }
 
   .panel {
-    @apply bg-tsu-bg/70 border border-tsu-card-border rounded-card;
+    @apply bg-white border border-tsu-card-border rounded-card shadow-card;
   }
 
   .field-label {
-    @apply block text-sm sm:text-[15px] font-medium text-tsu-text-primary mb-2;
+    @apply block text-sm sm:text-[15px] font-semibold text-tsu-navy mb-2;
   }
 
   .field {
-    @apply w-full bg-tsu-input-bg border border-tsu-input-border rounded-xl px-4 py-3 text-base text-tsu-text-primary placeholder:text-tsu-text-muted transition focus:outline-none focus:border-tsu-accent focus:ring-2 focus:ring-tsu-accent/30 disabled:opacity-40;
+    @apply w-full bg-tsu-input-bg border border-tsu-input-border rounded-xl px-4 py-3 text-base text-tsu-text-primary placeholder:text-tsu-text-muted transition focus:outline-none focus:border-tsu-navy focus:ring-2 focus:ring-tsu-accent/30 disabled:opacity-50 disabled:bg-tsu-bg;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tsu-accent/60 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 rounded-pill px-6 py-3 text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tsu-accent/60 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
+  /* Navy on light surfaces. */
   .btn-primary {
-    @apply btn bg-tsu-accent text-white shadow-glow hover:bg-blue-500;
+    @apply btn bg-tsu-navy text-white shadow-navy hover:bg-[#162c55];
+  }
+
+  /* Gold on dark (hero, CTA band). */
+  .btn-gold {
+    @apply btn bg-tsu-gold text-tsu-navy shadow-glow hover:bg-[#edc86e];
   }
 
   .btn-secondary {
-    @apply btn bg-white/5 border border-white/15 text-white hover:bg-white/10;
+    @apply btn bg-white border border-tsu-input-border text-tsu-navy hover:bg-tsu-bg;
+  }
+
+  .btn-ghost-dark {
+    @apply btn bg-white/10 border border-white/25 text-white hover:bg-white/20;
   }
 
   .btn-success {
-    @apply btn bg-tsu-success-bg text-tsu-success-text border border-green-900/50 hover:brightness-125;
+    @apply btn bg-tsu-success-bg text-tsu-success-text border border-green-200 hover:brightness-95;
   }
 
   .btn-danger {
-    @apply btn bg-transparent border border-red-900 text-red-400 hover:bg-red-950;
+    @apply btn bg-white border border-red-300 text-red-700 hover:bg-red-50;
   }
 
   .pill {
@@ -118,13 +126,12 @@ body {
     @apply pill bg-tsu-success-bg text-tsu-success-text;
   }
 
-  /* Gold stays reserved for restricted / published-restricted states. */
   .pill-gold {
     @apply pill bg-tsu-gold-bg text-tsu-gold-text;
   }
 
   .pill-red {
-    @apply pill bg-red-950 text-red-400;
+    @apply pill bg-red-50 text-red-700;
   }
 
   .chip {
@@ -132,10 +139,14 @@ body {
   }
 
   .alert-error {
-    @apply rounded-xl bg-red-950 text-red-300 border border-red-900/60 p-4 text-base;
+    @apply rounded-xl bg-red-50 text-red-800 border border-red-200 p-4 text-base;
   }
 
   .alert-success {
-    @apply rounded-xl bg-tsu-success-bg text-tsu-success-text border border-green-900/50 p-4 text-base;
+    @apply rounded-xl bg-tsu-success-bg text-tsu-success-text border border-green-200 p-4 text-base;
+  }
+
+  .alert-notice {
+    @apply rounded-xl bg-tsu-gold-bg text-tsu-gold-text border border-[#f0dca4] p-4 text-base;
   }
 }

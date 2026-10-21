@@ -74,7 +74,7 @@ export function CitationCard({
                 type="button"
                 onClick={() => setTab(value)}
                 className={`rounded-pill px-3.5 py-1.5 text-sm font-semibold transition-colors ${
-                  tab === value ? "bg-tsu-accent text-white" : "text-tsu-text-secondary hover:text-white"
+                  tab === value ? "bg-tsu-navy text-white" : "text-tsu-text-secondary hover:text-tsu-navy"
                 }`}
               >
                 {label}
@@ -84,7 +84,7 @@ export function CitationCard({
           <button
             type="button"
             onClick={copy}
-            className="rounded-pill border border-tsu-card-border bg-tsu-bg px-4 py-2 text-sm font-semibold text-tsu-accent-tag-text transition-colors hover:text-white"
+            className="rounded-pill border border-tsu-card-border bg-tsu-bg px-4 py-2 text-sm font-semibold text-tsu-accent-tag-text transition-colors hover:text-tsu-navy"
           >
             {copied ? "Copied" : "Copy"}
           </button>
@@ -96,7 +96,7 @@ export function CitationCard({
           {text}
         </pre>
       ) : (
-        <p className="break-words font-display text-lg leading-relaxed text-white sm:text-xl">{text}</p>
+        <p className="break-words text-base leading-relaxed text-tsu-text-primary sm:text-lg">{text}</p>
       )}
     </div>
   );

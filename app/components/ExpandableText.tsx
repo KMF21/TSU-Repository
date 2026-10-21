@@ -40,7 +40,7 @@ export function ExpandableText({
           type="button"
           onClick={() => setExpanded((v) => !v)}
           aria-expanded={expanded}
-          className="mt-3 inline-flex items-center gap-1.5 text-base font-semibold text-tsu-accent-tag-text transition-colors hover:text-white"
+          className="mt-3 inline-flex items-center gap-1.5 text-base font-semibold text-tsu-accent-tag-text transition-colors hover:text-tsu-navy"
         >
           {expanded ? "Show less" : "Read more"}
           <svg

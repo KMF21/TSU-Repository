@@ -32,7 +32,7 @@ export default async function EditThesisPage({ params }: { params: { id: string 
       <div className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-14">
         <Link
           href={`/admin/theses/${thesis.id}`}
-          className="mb-8 inline-flex items-center gap-2 text-base font-medium text-tsu-text-secondary transition-colors hover:text-white"
+          className="mb-8 inline-flex items-center gap-2 text-base font-medium text-tsu-text-secondary transition-colors hover:text-tsu-navy"
         >
           &larr; Back to review
         </Link>

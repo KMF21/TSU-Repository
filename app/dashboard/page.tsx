@@ -74,7 +74,7 @@ function SubmissionCard({ thesis }: { thesis: any }) {
     <div className="card p-6 sm:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <h2 className="font-display text-xl font-semibold leading-snug text-white sm:text-2xl">
+          <h2 className="font-display text-xl font-semibold leading-snug text-tsu-navy sm:text-2xl">
             {thesis.title}
           </h2>
           {thesis.submitted_on_behalf && (
@@ -115,7 +115,7 @@ function SubmissionCard({ thesis }: { thesis: any }) {
       {thesis.status === "published" && (
         <Link
           href={`/theses/${thesis.id}`}
-          className="mt-6 inline-flex items-center gap-2 text-base font-semibold text-tsu-accent-tag-text transition-colors hover:text-white"
+          className="mt-6 inline-flex items-center gap-2 text-base font-semibold text-tsu-accent-tag-text transition-colors hover:text-tsu-navy"
         >
           View public listing &rarr;
         </Link>

@@ -34,7 +34,7 @@ export function AccessLevelToggle({
     <div className="panel mb-6 p-5 sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-lg font-semibold text-white">
+          <p className="text-lg font-semibold text-tsu-navy">
             {level === "open" ? "Open access" : "Restricted"}
           </p>
           <p className="mt-1 text-base text-tsu-text-secondary">
@@ -48,14 +48,14 @@ export function AccessLevelToggle({
           disabled={isPending}
           className={`btn flex-shrink-0 ${
             level === "open"
-              ? "bg-tsu-accent-tag-bg text-tsu-accent-tag-text hover:bg-tsu-accent hover:text-white"
+              ? "bg-tsu-accent-tag-bg text-tsu-accent-tag-text hover:bg-tsu-navy hover:text-white"
               : "bg-tsu-gold-bg text-tsu-gold-text hover:brightness-125"
           }`}
         >
           {isPending ? "Updating…" : level === "open" ? "Make restricted" : "Make open"}
         </button>
       </div>
-      {error && <p className="mt-3 text-base text-red-400">{error}</p>}
+      {error && <p className="mt-3 text-base text-red-700">{error}</p>}
     </div>
   );
 }

@@ -42,7 +42,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
       <div className="mx-auto max-w-4xl px-5 py-10 sm:px-8 sm:py-14">
         <Link
           href="/admin"
-          className="mb-8 inline-flex items-center gap-2 text-base font-medium text-tsu-text-secondary transition-colors hover:text-white"
+          className="mb-8 inline-flex items-center gap-2 text-base font-medium text-tsu-text-secondary transition-colors hover:text-tsu-navy"
         >
           &larr; Back to submissions
         </Link>
@@ -61,7 +61,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
             </div>
           </div>
 
-          <h1 className="font-display text-2xl font-semibold leading-tight text-white sm:text-4xl">
+          <h1 className="font-display text-2xl font-semibold leading-tight text-tsu-navy sm:text-4xl">
             {thesis.title}
           </h1>
           <p className="mt-4 text-base text-tsu-text-secondary sm:text-lg">
@@ -121,7 +121,7 @@ export default async function ThesisReviewPage({ params }: { params: { id: strin
 
           <div className="panel mt-5 mb-6 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
             <div className="min-w-0">
-              <p className="truncate text-base font-semibold text-white sm:text-lg">
+              <p className="truncate text-base font-semibold text-tsu-navy sm:text-lg">
                 {thesis.original_filename}
               </p>
               <p className="mt-0.5 text-base text-tsu-text-muted">
