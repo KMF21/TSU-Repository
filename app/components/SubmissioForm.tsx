@@ -312,14 +312,14 @@ export function SubmissionForm({
               <div className="min-w-0 flex-1">
                 {file ? (
                   <>
-                    <p className="truncate text-base font-semibold text-white sm:text-lg">{file.name}</p>
+                    <p className="truncate text-base font-semibold text-tsu-navy sm:text-lg">{file.name}</p>
                     <p className="mt-0.5 text-base text-tsu-text-muted">
                       {(file.size / (1024 * 1024)).toFixed(1)}MB · PDF
                     </p>
                   </>
                 ) : (
                   <>
-                    <p className="text-base font-semibold text-white sm:text-lg">Choose a PDF to upload</p>
+                    <p className="text-base font-semibold text-tsu-navy sm:text-lg">Choose a PDF to upload</p>
                     <p className="mt-0.5 text-sm text-tsu-text-muted sm:text-base">
                       Up to 50MB. Large files should be compressed first.
                     </p>
@@ -335,7 +335,7 @@ export function SubmissionForm({
               onChange={handleFileChange}
               className="hidden"
             />
-            {fileError && <p className="mt-3 text-base text-red-400">{fileError}</p>}
+            {fileError && <p className="mt-3 text-base text-red-700">{fileError}</p>}
             <p className="mt-4 text-base leading-relaxed text-tsu-text-muted">
               If your file is large (scanned pages or many images), compress it before uploading using
               a free tool such as{" "}
@@ -387,7 +387,7 @@ export function SubmissionForm({
         <div className="mt-10 border-t border-tsu-card-border pt-8">
           <p className="section-label mb-4">How this will be cited</p>
           <div className="panel p-5 sm:p-7">
-            <p className="font-display text-lg leading-relaxed text-white sm:text-xl">
+            <p className="font-display text-lg leading-relaxed text-tsu-navy sm:text-xl">
               {authorName.trim() || "Author name"}. ({year || "Year"}).{" "}
               <span className="italic">{title || "Thesis title"}</span>.{" "}
               {selectedProgramme ? DEGREE_LABELS[selectedProgramme.degree_type] : "Degree"} thesis,{" "}

@@ -75,14 +75,14 @@ export function ReviewDecision({ thesisId }: { thesisId: string }) {
             <button
               type="submit"
               disabled={isPending}
-              className="btn bg-red-950 text-red-300 hover:bg-red-900"
+              className="btn bg-red-50 text-red-800 hover:bg-red-900"
             >
               {isPending ? "Submitting…" : "Confirm rejection"}
             </button>
             <button
               type="button"
               onClick={() => setShowRejectForm(false)}
-              className="btn text-tsu-text-secondary hover:text-white"
+              className="btn text-tsu-text-secondary hover:text-tsu-navy"
             >
               Cancel
             </button>

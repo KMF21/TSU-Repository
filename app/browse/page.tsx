@@ -52,12 +52,12 @@ export default async function BrowsePage({
 
   return (
     <main className="min-h-screen bg-tsu-bg">
-      <div className="relative overflow-hidden border-b border-tsu-card-border bg-gradient-to-b from-tsu-card/60 to-tsu-bg">
-        <div className="pointer-events-none absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-tsu-accent/15 blur-[120px]" />
+      <div className="relative overflow-hidden bg-tsu-navy pb-16 sm:pb-20">
+        <div className="pointer-events-none absolute -top-32 left-1/4 h-72 w-72 rounded-full bg-tsu-accent/20 blur-[120px]" />
         <div className="relative mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-          <p className="eyebrow mb-3">Search the archive</p>
-          <h1 className="page-title">Browse research</h1>
-          <p className="mt-4 max-w-2xl text-base text-tsu-text-secondary sm:text-lg">
+          <p className="eyebrow mb-3 !text-tsu-gold">Search the archive</p>
+          <h1 className="page-title !text-white">Browse research</h1>
+          <p className="mt-4 max-w-2xl text-base text-slate-300 sm:text-lg">
             Theses and dissertations from every faculty of Taraba State University.
           </p>
         </div>
@@ -66,7 +66,7 @@ export default async function BrowsePage({
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-12">
 
         {/* Search + filters */}
-        <form method="GET" className="card mb-8 p-5 sm:p-7">
+        <form method="GET" className="card relative z-10 -mt-14 mb-8 p-5 shadow-lift sm:-mt-16 sm:p-7">
           <div className="relative">
             <svg
               className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-tsu-text-muted"
@@ -139,7 +139,7 @@ export default async function BrowsePage({
               {faculty && (
                 <Link
                   href={`/browse${q ? `?q=${encodeURIComponent(q)}` : ""}`}
-                  className="chip gap-2 hover:bg-tsu-accent hover:text-white"
+                  className="chip gap-2 hover:bg-tsu-navy hover:text-white"
                 >
                   {faculty} <span aria-hidden>&times;</span>
                 </Link>
@@ -150,11 +150,11 @@ export default async function BrowsePage({
                 <Link
                   key={t.id}
                   href={`/theses/${t.id}`}
-                  className="card group relative block overflow-hidden p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-tsu-accent hover:bg-tsu-card-hover sm:p-8"
+                  className="card group relative block overflow-hidden p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-tsu-accent/50 hover:shadow-lift sm:p-8"
                 >
-                  <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-tsu-accent to-sky-400 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-tsu-accent to-tsu-gold opacity-0 transition-opacity group-hover:opacity-100" />
                   <div className="flex items-start justify-between gap-4">
-                    <h2 className="font-display text-xl font-semibold leading-snug text-white sm:text-2xl">
+                    <h2 className="font-display text-lg font-bold leading-snug text-tsu-navy sm:text-xl">
                       {t.title}
                     </h2>
                     <span className="flex-shrink-0 pt-1 text-tsu-text-muted transition-all group-hover:translate-x-1 group-hover:text-tsu-accent-tag-text">

@@ -61,8 +61,8 @@ export default async function AdminQueuePage({
               href={`/admin?status=${tab.value}`}
               className={`flex-shrink-0 rounded-pill px-5 py-2.5 text-base font-semibold transition-colors ${
                 activeStatus === tab.value
-                  ? "bg-tsu-accent text-white shadow-glow"
-                  : "border border-tsu-card-border bg-tsu-card text-tsu-text-secondary hover:text-white"
+                  ? "bg-tsu-navy text-white shadow-navy"
+                  : "border border-tsu-card-border bg-tsu-card text-tsu-text-secondary hover:text-tsu-navy"
               }`}
             >
               {tab.label}
@@ -89,7 +89,7 @@ export default async function AdminQueuePage({
                 className="card group flex flex-col gap-4 p-5 transition-colors hover:border-tsu-accent hover:bg-tsu-card-hover sm:flex-row sm:items-center sm:justify-between sm:p-7"
               >
                 <div className="min-w-0">
-                  <p className="font-display text-lg font-semibold leading-snug text-white sm:text-xl">
+                  <p className="font-display text-lg font-semibold leading-snug text-tsu-navy sm:text-xl">
                     {t.title}
                   </p>
                   <p className="mt-2 text-base text-tsu-text-secondary">
@@ -103,7 +103,7 @@ export default async function AdminQueuePage({
                     {t.abstract}
                   </p>
                   {t.status === "rejected" && t.rejection_reason && (
-                    <p className="mt-2.5 text-base text-red-400">Reason: {t.rejection_reason}</p>
+                    <p className="mt-2.5 text-base text-red-700">Reason: {t.rejection_reason}</p>
                   )}
                 </div>
                 <StatusPill status={t.status} accessLevel={t.access_level} />
@@ -128,7 +128,7 @@ function StatusPill({ status, accessLevel }: { status: string; accessLevel: stri
     return <span className="pill-red flex-shrink-0 self-start sm:self-auto">Rejected</span>;
   }
   return (
-    <span className="pill-blue flex-shrink-0 self-start transition-colors group-hover:bg-tsu-accent group-hover:text-white sm:self-auto">
+    <span className="pill-blue flex-shrink-0 self-start transition-colors group-hover:bg-tsu-navy group-hover:text-white sm:self-auto">
       Review
     </span>
   );
