@@ -7,6 +7,7 @@ import {
   createServiceRoleSupabaseClient,
 } from "@/lib/supabase/server";
 import { ExpandableText } from "@/app/components/ExpandableText";
+import { CitationCard } from "@/app/components/CitationCard";
 import { DEGREE_LABELS, INSTITUTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 /**
@@ -103,8 +104,6 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
   const degree = DEGREE_LABELS[thesis.degree_type] ?? thesis.degree_type;
   const pageUrl = `${SITE_URL}/theses/${thesis.id}`;
 
-  const citation = `${authorName}. (${thesis.year}). ${thesis.title}. ${degree} thesis, ${department?.name}, ${INSTITUTION}.`;
-
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Thesis",
@@ -141,15 +140,17 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-10">
           {/* ---------- Main column ---------- */}
           <div className="min-w-0 space-y-6">
-            <div className="card p-6 sm:p-10">
-              <div className="mb-5 flex flex-wrap items-center gap-3">
+            <div className="card relative overflow-hidden p-6 sm:p-10">
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-tsu-accent via-sky-400 to-transparent" />
+              <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-tsu-accent/10 blur-[90px]" />
+              <div className="relative mb-5 flex flex-wrap items-center gap-3">
                 <p className="eyebrow">{department?.faculty}</p>
                 {thesis.access_level === "restricted" && (
                   <span className="pill-gold">TSU access only</span>
                 )}
               </div>
 
-              <h1 className="font-display text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[44px]">
+              <h1 className="relative font-display text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[44px]">
                 {thesis.title}
               </h1>
 
@@ -178,10 +179,16 @@ export default async function ThesisDetailPage({ params }: { params: { id: strin
               )}
             </div>
 
-            <div className="card p-6 sm:p-10">
-              <p className="section-label mb-4">How to cite this</p>
-              <p className="font-display text-lg leading-relaxed text-white sm:text-xl">{citation}</p>
-            </div>
+            <CitationCard
+              author={authorName}
+              year={thesis.year}
+              title={thesis.title}
+              degreeType={thesis.degree_type}
+              degreeLabel={degree}
+              department={department?.name ?? ""}
+              institution={INSTITUTION}
+              url={pageUrl}
+            />
           </div>
 
           {/* ---------- Sidebar ---------- */}
